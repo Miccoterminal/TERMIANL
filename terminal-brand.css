@@ -1,0 +1,644 @@
+/* ═══════════════════════════════════════════════════════
+   TERMINAL — Brand CSS for Fullstack Classic 2.4
+   ═══════════════════════════════════════════════════════ */
+
+/* ── FONTS ── */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;700;900&family=Bebas+Neue&display=swap');
+
+/* ── BRAND TOKENS ── */
+:root {
+  --t-black:       #0a0a0a;
+  --t-white:       #f4f4f4;
+  --t-bg:          #ffffff;
+  --t-bg-soft:     #f8f8f8;
+  --t-border:      #e0e0e0;
+  --t-metal-dark:  #2a2a2a;
+  --t-metal:       #4a4a4a;
+  --t-metal-light: #8a8a8a;
+
+  /* ── FULLSTACK FONT OVERRIDES ── */
+  --font-heading--family:    'IBM Plex Sans', sans-serif;
+  --font-heading--weight:    900;
+  --font-subheading--family: 'IBM Plex Mono', monospace;
+  --font-subheading--weight: 400;
+  --font-body--family:       'IBM Plex Sans', sans-serif;
+  --font-body--weight:       400;
+
+  --font-h1--family:         'Bebas Neue', sans-serif;
+  --font-h1--weight:         400;
+  --font-h1--letter-spacing: 0.1em;
+  --font-h1--case:           uppercase;
+
+  --font-h2--family:         'Bebas Neue', sans-serif;
+  --font-h2--weight:         400;
+  --font-h2--letter-spacing: 0.08em;
+  --font-h2--case:           uppercase;
+
+  --font-h3--family:         'IBM Plex Sans', sans-serif;
+  --font-h3--weight:         900;
+  --font-h3--letter-spacing: 0.05em;
+  --font-h3--case:           uppercase;
+
+  --font-h4--family:         'IBM Plex Sans', sans-serif;
+  --font-h4--weight:         700;
+  --font-h4--letter-spacing: 0.03em;
+  --font-h4--case:           uppercase;
+
+  --font-h5--family:         'IBM Plex Mono', monospace;
+  --font-h5--weight:         700;
+  --font-h5--letter-spacing: 0.05em;
+  --font-h5--case:           uppercase;
+
+  --font-h6--family:         'IBM Plex Mono', monospace;
+  --font-h6--weight:         400;
+  --font-h6--letter-spacing: 0.05em;
+  --font-h6--case:           uppercase;
+
+  /* ── FULLSTACK COLOR OVERRIDES ── */
+  --color-foreground:                   10, 10, 10;
+  --color-background:                   255, 255, 255;
+  --color-border:                       var(--t-border);
+  --color-shadow:                       0, 0, 0;
+
+  --color-primary-button-background:    var(--t-black);
+  --color-primary-button-text:          var(--t-white);
+  --color-primary-button-border:        var(--t-black);
+
+  --color-secondary-button-background:  var(--t-bg);
+  --color-secondary-button-text:        var(--t-black);
+  --color-secondary-button-border:      var(--t-black);
+
+  --color-primary-badge-background:     var(--t-black);
+  --color-primary-badge-text:           var(--t-white);
+  --color-primary-badge-border:         var(--t-black);
+
+  --color-secondary-badge-background:   var(--t-bg-soft);
+  --color-secondary-badge-text:         var(--t-metal);
+  --color-secondary-badge-border:       var(--t-border);
+
+  --color-input-background:             var(--t-bg);
+  --color-input-text:                   var(--t-black);
+  --color-input-border:                 var(--t-border);
+
+  /* ── RADIUS — SHARP/INDUSTRIAL ── */
+  --button-border-radius:  4px;
+  --card-border-radius:    4px;
+  --inputs-border-radius:  4px;
+  --badge-border-radius:   2px;
+
+  /* ── BUTTON STYLE ── */
+  --button-primary-font-weight:    700;
+  --button-primary-text-transform: uppercase;
+  --button-letter-spacing:         0.1em;
+
+  --button-secondary-font-weight:    600;
+  --button-secondary-text-transform: uppercase;
+}
+
+/* ── GLOBAL ── */
+body {
+  background-color: var(--t-bg);
+  color: var(--t-black);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--t-black);
+  color: var(--t-white);
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--t-bg-soft); }
+::-webkit-scrollbar-thumb { background: var(--t-border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--t-metal-light); }
+
+/* ── TYPOGRAPHY FORCE ── */
+h1, .h1 {
+  font-family: 'Bebas Neue', sans-serif !important;
+  letter-spacing: 0.1em !important;
+  font-weight: 400 !important;
+  text-transform: uppercase !important;
+}
+
+h2, .h2 {
+  font-family: 'Bebas Neue', sans-serif !important;
+  letter-spacing: 0.08em !important;
+  font-weight: 400 !important;
+  text-transform: uppercase !important;
+}
+
+h3, .h3 {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+}
+
+h4, .h4 {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+}
+
+h5, .h5,
+h6, .h6 {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+}
+
+/* ── HEADER ── */
+.header,
+.site-header,
+[class*='header__'] {
+  background-color: var(--t-bg) !important;
+}
+
+.header {
+  border-bottom: 1.5px solid var(--t-border) !important;
+  box-shadow: none !important;
+}
+
+.header__logo,
+.header__logo-image,
+.header__menu-item,
+.header__nav a,
+.header__actions a {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  color: var(--t-metal) !important;
+}
+
+.header__menu-item:hover,
+.header__nav a:hover {
+  color: var(--t-black) !important;
+  opacity: 1 !important;
+}
+
+/* ── ANNOUNCEMENT / MARQUEE BAR ── */
+.announcement-bar,
+[class*='announcement'],
+.marquee-section {
+  background-color: var(--t-black) !important;
+  color: var(--t-white) !important;
+}
+
+.announcement-bar *,
+[class*='announcement'] *,
+.marquee-section * {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  color: var(--t-white) !important;
+}
+
+/* ── BUTTONS ── */
+.button {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  border-radius: 4px !important;
+  padding: 14px 28px !important;
+  transition: opacity 0.2s ease, background-color 0.2s ease !important;
+}
+
+.button:not(.button--secondary):not(.button--tertiary) {
+  background-color: var(--t-black) !important;
+  color: var(--t-white) !important;
+  border-color: var(--t-black) !important;
+}
+
+.button:not(.button--secondary):not(.button--tertiary):hover {
+  background-color: var(--t-metal-dark) !important;
+  border-color: var(--t-metal-dark) !important;
+  opacity: 1 !important;
+}
+
+.button--secondary {
+  background-color: var(--t-bg) !important;
+  color: var(--t-black) !important;
+  border: 1.5px solid var(--t-black) !important;
+}
+
+.button--secondary:hover {
+  background-color: var(--t-bg-soft) !important;
+  opacity: 1 !important;
+}
+
+/* ── PRODUCT CARDS ── */
+.product-card,
+[class*='product-card'],
+.card--product {
+  border: 1.5px solid var(--t-border) !important;
+  border-radius: 4px !important;
+  background: var(--t-bg) !important;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.product-card:hover,
+[class*='product-card']:hover {
+  border-color: var(--t-black) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.07) !important;
+}
+
+.product-card__title,
+[class*='product-card__title'],
+.product-card__name {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: var(--t-black) !important;
+}
+
+.product-card__vendor,
+[class*='product-card__vendor'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.6rem !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  color: var(--t-metal-light) !important;
+}
+
+.price-container .price,
+.price-container .compare-at-price,
+[class*='price'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-weight: 700 !important;
+  color: var(--t-black) !important;
+}
+
+.price-container .compare-at-price {
+  color: var(--t-metal-light) !important;
+}
+
+/* ── BADGES ── */
+.badge {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.6rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  border-radius: 2px !important;
+  background-color: var(--t-black) !important;
+  color: var(--t-white) !important;
+  border-color: var(--t-black) !important;
+}
+
+.badge--secondary {
+  background-color: var(--t-bg-soft) !important;
+  color: var(--t-metal) !important;
+  border-color: var(--t-border) !important;
+}
+
+/* ── SECTION TITLES ── */
+.section__title,
+[class*='section__title'],
+[class*='section-title'] {
+  font-family: 'Bebas Neue', sans-serif !important;
+  letter-spacing: 0.12em !important;
+  font-weight: 400 !important;
+  text-transform: uppercase !important;
+  color: var(--t-black) !important;
+}
+
+/* ── COLLECTION PAGE ── */
+.collection__title,
+[class*='collection__title'] {
+  font-family: 'Bebas Neue', sans-serif !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+}
+
+/* ── PRODUCT PAGE ── */
+.product__title,
+[class*='product__title'],
+.product-title {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: var(--t-black) !important;
+}
+
+.product__vendor,
+[class*='product__vendor'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.25em !important;
+  text-transform: uppercase !important;
+  color: var(--t-metal-light) !important;
+}
+
+.product__price,
+[class*='product__price'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 1.4rem !important;
+  font-weight: 700 !important;
+  color: var(--t-black) !important;
+}
+
+.product__description,
+[class*='product__description'],
+.product-description {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.82rem !important;
+  color: var(--t-metal) !important;
+  line-height: 1.8 !important;
+}
+
+.product__description ul {
+  list-style: none !important;
+  padding: 0 !important;
+}
+
+.product__description li::before {
+  content: '— ';
+  color: var(--t-metal-light);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ── VARIANT PICKER ── */
+[class*='variant-picker'],
+[class*='variant_label'],
+.variant_label {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  color: var(--t-metal) !important;
+}
+
+/* ── CART DRAWER ── */
+cart-drawer,
+.cart-drawer,
+[class*='cart-drawer'] {
+  background: var(--t-bg) !important;
+}
+
+[class*='cart-drawer__header'],
+.cart-drawer__header {
+  background: var(--t-black) !important;
+  border-bottom: 1px solid var(--t-metal-dark) !important;
+}
+
+[class*='cart-drawer__header'] *,
+.cart-drawer__header * {
+  color: var(--t-white) !important;
+  font-family: 'IBM Plex Mono', monospace !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+}
+
+[class*='cart-drawer__header'] h2,
+.cart-drawer__header h2 {
+  font-family: 'Bebas Neue', sans-serif !important;
+  letter-spacing: 0.2em !important;
+  font-size: 1.4rem !important;
+}
+
+[class*='cart-item__title'],
+.cart-item__title {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.04em !important;
+}
+
+[class*='cart-item__price'],
+.cart-item__price {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-weight: 700 !important;
+}
+
+[class*='cart__subtotal'],
+[class*='cart__total'],
+.cart__subtotal {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+}
+
+/* ── QUANTITY SELECTOR ── */
+.quantity-selector,
+[class*='quantity-selector'],
+[class*='quantity__button'] {
+  border: 1.5px solid var(--t-border) !important;
+  background: var(--t-bg) !important;
+  color: var(--t-metal) !important;
+  font-family: 'IBM Plex Mono', monospace !important;
+  border-radius: 4px !important;
+}
+
+[class*='quantity__button']:hover {
+  background: var(--t-black) !important;
+  color: var(--t-white) !important;
+  border-color: var(--t-black) !important;
+}
+
+/* ── INPUTS / FORMS ── */
+input[type='text'],
+input[type='email'],
+input[type='tel'],
+input[type='number'],
+input[type='password'],
+textarea,
+select,
+.select {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.8rem !important;
+  border: 1.5px solid var(--t-border) !important;
+  border-radius: 4px !important;
+  background: var(--t-bg) !important;
+  color: var(--t-black) !important;
+  transition: border-color 0.2s !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+.select:focus {
+  border-color: var(--t-black) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ── ACCORDION (FAQ) ── */
+.accordion,
+[class*='accordion'] details summary,
+[class*='accordion__heading'] {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+  color: var(--t-black) !important;
+  border-color: var(--t-border) !important;
+}
+
+[class*='accordion__content'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.82rem !important;
+  color: var(--t-metal) !important;
+  line-height: 1.8 !important;
+}
+
+/* ── FILTERS / SORT ── */
+[class*='filter__heading'],
+[class*='facet__heading'],
+[class*='filters__title'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  color: var(--t-black) !important;
+}
+
+/* ── FOOTER ── */
+.footer,
+[class*='footer'] {
+  background-color: var(--t-bg-soft) !important;
+  border-top: 1.5px solid var(--t-border) !important;
+}
+
+[class*='footer__heading'],
+[class*='footer-block__heading'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  color: var(--t-black) !important;
+}
+
+.footer a,
+[class*='footer__link'],
+[class*='footer-block__list'] a {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.06em !important;
+  color: var(--t-metal-light) !important;
+  transition: color 0.2s !important;
+}
+
+.footer a:hover,
+[class*='footer__link']:hover {
+  color: var(--t-black) !important;
+  opacity: 1 !important;
+}
+
+[class*='footer__copyright'],
+[class*='copyright'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.6rem !important;
+  letter-spacing: 0.12em !important;
+  color: var(--t-metal-light) !important;
+}
+
+/* ── MARQUEE (built-in Fullstack block) ── */
+.marquee,
+[class*='marquee__item'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+}
+
+/* ── BREADCRUMBS ── */
+[class*='breadcrumb'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--t-metal-light) !important;
+}
+
+/* ── PAGINATION ── */
+[class*='pagination'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+}
+
+[class*='pagination__item--current'],
+[class*='pagination__item--active'] {
+  background: var(--t-black) !important;
+  color: var(--t-white) !important;
+  border-color: var(--t-black) !important;
+}
+
+/* ── ICON STRIP / TRUST BADGES ── */
+[class*='icon-with-text'],
+[class*='icon-text'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: var(--t-metal) !important;
+}
+
+/* ── TABS ── */
+[class*='tab-button'],
+[class*='tabs__button'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  border-radius: 4px !important;
+}
+
+/* ── REVIEW / RATING ── */
+[class*='review__author'],
+[class*='review__title'] {
+  font-family: 'IBM Plex Sans', sans-serif !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+[class*='review__content'],
+[class*='review__text'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.82rem !important;
+  color: var(--t-metal) !important;
+  line-height: 1.8 !important;
+}
+
+/* ── PREDICTIVE SEARCH ── */
+[class*='predictive-search__heading'],
+[class*='predictive-search__title'] {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  color: var(--t-metal-light) !important;
+}
+
+/* ── SIDE MENU (mobile nav) ── */
+[class*='side-menu'],
+.side-menu {
+  background: var(--t-bg) !important;
+}
+
+[class*='side-menu__item'],
+.side-menu a {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  color: var(--t-metal) !important;
+}
+
+[class*='side-menu__item']:hover,
+.side-menu a:hover {
+  color: var(--t-black) !important;
+}
