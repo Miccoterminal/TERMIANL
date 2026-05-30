@@ -6,1228 +6,400 @@
 <title>TERMINAL — Accessoires de Voyage</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;700&family=IBM+Plex+Sans:wght@300;400;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════
-   DESIGN TOKENS — modifier ici pour tout changer
-═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   TOKENS — tout modifier ici
+═══════════════════════════════════════ */
 :root {
-  /* Couleurs */
-  --c-black:       #0a0a0a;
-  --c-tile:        #141414;
-  --c-metal-dark:  #2a2a2a;
-  --c-metal:       #4a4a4a;
-  --c-metal-light: #8a8a8a;
-  --c-border:      #e0e0e0;
-  --c-border-dark: #c0c0c0;
-  --c-bg:          #ffffff;
-  --c-bg-soft:     #f8f8f8;
-  --c-bg-tile:     #f2f2f2;
-  --c-white:       #f4f4f4;
-  --c-text:        #0a0a0a;
-  --c-text-muted:  #6a6a6a;
+  --black:       #0a0a0a;
+  --tile:        #141414;
+  --metal-dark:  #2a2a2a;
+  --metal:       #4a4a4a;
+  --metal-light: #8a8a8a;
+  --border:      #e0e0e0;
+  --border-dark: #c0c0c0;
+  --bg:          #ffffff;
+  --bg-soft:     #f8f8f8;
+  --bg-tile:     #f2f2f2;
+  --white:       #f4f4f4;
+  --text:        #0a0a0a;
+  --text-muted:  #6a6a6a;
+  --cart-w:      420px;
+  --r:           4px;
+  --ease:        cubic-bezier(.4,0,.2,1);
+  --sp:          .3s;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;border:none;background:none;font-family:inherit;}
+ul{list-style:none;}
 
-  /* Typographie */
-  --f-display:  'IBM Plex Sans', sans-serif;
-  --f-mono:     'IBM Plex Mono', monospace;
-  --f-label:    'Bebas Neue', sans-serif;
+/* ── SOLARI ── */
+.solari{display:inline-flex;gap:3px;align-items:center;}
+.solari.sm{gap:2px;}
+.solari.lg{gap:4px;}
+.s-tile{position:relative;display:flex;align-items:center;justify-content:center;background:var(--tile);border-radius:3px;}
+.s-tile::before{content:'';position:absolute;left:0;right:0;top:50%;height:1.5px;background:var(--black);z-index:2;}
+.solari    .s-tile{width:36px;height:44px;}
+.solari.sm .s-tile{width:24px;height:30px;}
+.solari.lg .s-tile{width:52px;height:64px;}
+.s-tile .s-letter{font-family:'IBM Plex Sans',sans-serif;font-weight:900;color:var(--white);position:relative;z-index:1;line-height:1;}
+.solari    .s-letter{font-size:22px;}
+.solari.sm .s-letter{font-size:14px;}
+.solari.lg .s-letter{font-size:32px;}
 
-  /* Espacements */
-  --gutter:     24px;
-  --radius:     4px;
+/* ── TOPBAR ── */
+.topbar{background:var(--black);color:var(--white);text-align:center;padding:8px 24px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;}
 
-  /* Cart drawer */
-  --cart-width: 420px;
+/* ── HEADER ── */
+.header{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1.5px solid var(--border);}
+.header-inner{max-width:1400px;margin:0 auto;padding:0 24px;height:72px;display:flex;align-items:center;gap:32px;}
+.header-nav{display:flex;gap:0;margin-left:24px;}
+.header-nav a{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--metal);padding:8px 16px;border-radius:var(--r);transition:color var(--sp) var(--ease),background var(--sp) var(--ease);}
+.header-nav a:hover,.header-nav a.active{color:var(--black);}
+.header-nav a.active{font-weight:700;}
+.header-actions{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.btn-icon{width:40px;height:40px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;color:var(--metal);transition:color var(--sp) var(--ease),background var(--sp) var(--ease);position:relative;}
+.btn-icon:hover{color:var(--black);background:var(--bg-soft);}
+.btn-icon svg{width:20px;height:20px;}
+.cart-badge{position:absolute;top:4px;right:4px;width:16px;height:16px;background:var(--black);color:var(--white);border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;}
+.cart-badge.bump{animation:bump .3s var(--ease);}
+@keyframes bump{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
 
-  /* Transitions */
-  --ease:       cubic-bezier(.4,0,.2,1);
-  --speed:      .3s;
-}
+/* ── HERO ── */
+.hero{background:var(--black);color:var(--white);min-height:80vh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;}
+.hero-left{padding:80px 64px;display:flex;flex-direction:column;justify-content:center;gap:32px;}
+.hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:5px;text-transform:uppercase;color:rgba(244,244,244,.35);}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,6vw,88px);letter-spacing:4px;line-height:1;}
+.hero-sub{font-family:'IBM Plex Mono',monospace;font-size:13px;color:rgba(244,244,244,.45);line-height:1.7;max-width:360px;}
+.hero-cta{display:inline-flex;align-items:center;gap:12px;background:var(--white);color:var(--black);padding:14px 28px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:700;border-radius:var(--r);width:fit-content;transition:background var(--sp) var(--ease);}
+.hero-cta:hover{background:var(--bg-tile);}
+.hero-cta svg{width:16px;height:16px;}
+.hero-right{position:relative;overflow:hidden;}
+.hero-right svg{width:100%;height:100%;}
 
-/* ═══════════════════════════════════════════
-   RESET & BASE
-═══════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: var(--f-display);
-  background: var(--c-bg);
-  color: var(--c-text);
-  line-height: 1.5;
-  overflow-x: hidden;
-}
-img { display: block; width: 100%; }
-a { text-decoration: none; color: inherit; }
-button { cursor: pointer; border: none; background: none; font-family: inherit; }
-ul { list-style: none; }
+/* ── MARQUEE ── */
+.marquee-band{background:var(--black);border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a;overflow:hidden;padding:14px 0;white-space:nowrap;}
+.marquee-track{display:inline-flex;gap:48px;animation:marquee 30s linear infinite;}
+@keyframes marquee{to{transform:translateX(-50%)}}
+.marquee-item{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(244,244,244,.3);display:flex;align-items:center;gap:20px;}
+.marquee-dot{width:4px;height:4px;background:rgba(244,244,244,.2);border-radius:50%;flex-shrink:0;}
 
-/* ═══════════════════════════════════════════
-   SOLARI TILES — composant logo
-═══════════════════════════════════════════ */
-.solari {
-  display: inline-flex;
-  gap: 3px;
-  align-items: center;
-}
-.solari.sm { gap: 2px; }
+/* ── FEATURES ── */
+.feat-band{background:var(--bg-soft);border-top:1.5px solid var(--border);border-bottom:1.5px solid var(--border);}
+.feat-inner{max-width:1400px;margin:0 auto;padding:32px 24px;display:grid;grid-template-columns:repeat(4,1fr);}
+.feat-item{padding:20px 24px;display:flex;align-items:center;gap:14px;border-right:1px solid var(--border);}
+.feat-item:last-child{border-right:none;}
+.feat-icon{flex-shrink:0;width:36px;height:36px;color:var(--metal);}
+.feat-icon svg{width:100%;height:100%;}
+.feat-title{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--black);}
+.feat-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--metal-light);letter-spacing:1px;margin-top:2px;}
 
-.s-tile {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--c-tile);
-  border-radius: 3px;
-  overflow: hidden;
-}
-/* Ligne de charnière */
-.s-tile::before {
-  content: '';
-  position: absolute;
-  left: 0; right: 0;
-  top: 50%;
-  height: 1.5px;
-  background: var(--c-black);
-  z-index: 2;
-}
-/* Taille default */
-.solari .s-tile        { width: 36px; height: 44px; }
-.solari.sm .s-tile     { width: 24px; height: 30px; }
-.solari.lg .s-tile     { width: 56px; height: 68px; }
-.solari.xl .s-tile     { width: 80px; height: 98px; }
+/* ── SECTION ── */
+.section{max-width:1400px;margin:0 auto;padding:80px 24px;}
+.section-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px;padding-bottom:20px;border-bottom:1.5px solid var(--border);}
+.section-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--metal-light);margin-bottom:8px;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:4px;color:var(--black);}
+.section-link{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--metal);display:flex;align-items:center;gap:8px;transition:color var(--sp) var(--ease);}
+.section-link:hover{color:var(--black);}
+.section-link svg{width:14px;height:14px;}
 
-.s-tile .s-letter {
-  font-family: var(--f-display);
-  font-weight: 900;
-  color: var(--c-white);
-  position: relative;
-  z-index: 1;
-  line-height: 1;
-}
-.solari .s-letter      { font-size: 22px; }
-.solari.sm .s-letter   { font-size: 14px; }
-.solari.lg .s-letter   { font-size: 34px; }
-.solari.xl .s-letter   { font-size: 48px; }
+/* ── FILTERS ── */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
+.filter-btn{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);color:var(--metal);background:var(--bg);transition:all var(--sp) var(--ease);}
+.filter-btn:hover{border-color:var(--metal);color:var(--black);}
+.filter-btn.active{background:var(--black);color:var(--white);border-color:var(--black);}
 
-/* ═══════════════════════════════════════════
-   TOPBAR
-═══════════════════════════════════════════ */
-.topbar {
-  background: var(--c-black);
-  color: var(--c-white);
-  text-align: center;
-  padding: 8px var(--gutter);
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-}
+/* ── PRODUCT GRID ── */
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;}
+.product-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:border-color var(--sp) var(--ease),transform var(--sp) var(--ease);}
+.product-card:hover{border-color:var(--black);transform:translateY(-2px);}
+.product-image{aspect-ratio:1;background:var(--bg-tile);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.product-image svg{width:65%;height:65%;}
+.product-tag{position:absolute;top:12px;left:12px;background:var(--black);color:var(--white);font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:4px 8px;border-radius:2px;}
+.product-actions{position:absolute;bottom:12px;right:12px;opacity:0;transition:opacity var(--sp) var(--ease);}
+.product-card:hover .product-actions{opacity:1;}
+.btn-quick{background:var(--black);color:var(--white);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:8px 14px;border-radius:var(--r);display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.btn-quick svg{width:14px;height:14px;}
+.product-info{padding:16px;display:flex;flex-direction:column;gap:6px;flex:1;}
+.product-category{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--metal-light);}
+.product-name{font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--black);}
+.product-desc{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--metal-light);line-height:1.5;flex:1;}
+.product-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.product-price{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;color:var(--black);}
+.product-price-old{font-size:11px;color:var(--metal-light);text-decoration:line-through;margin-left:6px;}
+.btn-add-sm{width:32px;height:32px;border-radius:var(--r);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--metal);transition:all var(--sp) var(--ease);}
+.btn-add-sm:hover{border-color:var(--black);background:var(--black);color:var(--white);}
+.btn-add-sm svg{width:16px;height:16px;}
 
-/* ═══════════════════════════════════════════
-   HEADER
-═══════════════════════════════════════════ */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--c-bg);
-  border-bottom: 1.5px solid var(--c-border);
-}
-.header-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 var(--gutter);
-  height: 72px;
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
+/* ── CATEGORIES ── */
+.cat-strip{background:var(--black);padding:60px 0;}
+.cat-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:2px;}
+.cat-card{background:var(--tile);border:1px solid #1e1e1e;padding:32px 24px;display:flex;flex-direction:column;gap:16px;border-radius:var(--r);cursor:pointer;transition:background var(--sp) var(--ease);}
+.cat-card:hover{background:var(--metal-dark);}
+.cat-icon{width:48px;height:48px;}
+.cat-icon svg{width:100%;height:100%;}
+.cat-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
+.cat-count{font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(244,244,244,.3);letter-spacing:2px;}
+.cat-arrow{margin-top:auto;width:28px;height:28px;border:1px solid rgba(244,244,244,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(244,244,244,.4);}
+.cat-arrow svg{width:12px;height:12px;}
 
-.header-logo { flex-shrink: 0; }
+/* ── NEWSLETTER ── */
+.newsletter{background:var(--black);color:var(--white);padding:80px 24px;}
+.nl-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.nl-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:5px;color:rgba(244,244,244,.3);text-transform:uppercase;margin-bottom:16px;}
+.nl-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:4px;line-height:1;margin-bottom:16px;}
+.nl-sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(244,244,244,.4);line-height:1.7;}
+.nl-form{display:flex;flex-direction:column;gap:12px;}
+.nl-input{background:#141414;border:1.5px solid #2a2a2a;border-radius:var(--r);padding:14px 16px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--white);outline:none;transition:border-color var(--sp) var(--ease);}
+.nl-input::placeholder{color:rgba(244,244,244,.25);letter-spacing:2px;}
+.nl-input:focus{border-color:rgba(244,244,244,.4);}
+.nl-btn{background:var(--white);color:var(--black);padding:14px 24px;border-radius:var(--r);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;}
 
-.header-nav {
-  display: flex;
-  gap: 0;
-  margin-left: 24px;
-}
-.header-nav a {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--c-metal);
-  padding: 8px 16px;
-  border-radius: var(--radius);
-  transition: color var(--speed) var(--ease), background var(--speed) var(--ease);
-}
-.header-nav a:hover { color: var(--c-black); background: var(--c-bg-soft); }
-.header-nav a.active { color: var(--c-black); font-weight: 700; }
+/* ── FOOTER ── */
+.footer{background:var(--bg-soft);border-top:1.5px solid var(--border);padding:60px 24px 32px;}
+.footer-inner{max-width:1400px;margin:0 auto;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid var(--border);}
+.footer-brand-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--metal-light);letter-spacing:2px;margin-top:12px;line-height:1.7;max-width:240px;}
+.footer-col-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--black);font-weight:700;margin-bottom:16px;}
+.footer-links{display:flex;flex-direction:column;gap:10px;}
+.footer-links a{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--metal-light);letter-spacing:1px;transition:color var(--sp) var(--ease);}
+.footer-links a:hover{color:var(--black);}
+.footer-bottom{padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.footer-copy{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--metal-light);letter-spacing:2px;}
+.footer-legal{display:flex;gap:24px;}
+.footer-legal a{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--metal-light);letter-spacing:1px;}
 
-.header-actions {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.btn-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--c-metal);
-  transition: color var(--speed) var(--ease), background var(--speed) var(--ease);
-  position: relative;
-}
-.btn-icon:hover { color: var(--c-black); background: var(--c-bg-soft); }
-.btn-icon svg { width: 20px; height: 20px; }
+/* ── CART OVERLAY ── */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;pointer-events:none;transition:opacity var(--sp) var(--ease);backdrop-filter:blur(2px);}
+.cart-overlay.open{opacity:1;pointer-events:all;}
 
-.cart-badge {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 16px;
-  height: 16px;
-  background: var(--c-black);
-  color: var(--c-white);
-  border-radius: 50%;
-  font-size: 9px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--f-mono);
-  transition: transform .2s var(--ease);
-}
-.cart-badge.bump { animation: badge-bump .3s var(--ease); }
-@keyframes badge-bump {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.5); }
-  100% { transform: scale(1); }
-}
+/* ── CART DRAWER ── */
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:var(--cart-w);background:var(--bg);z-index:201;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .4s var(--ease);box-shadow:-8px 0 40px rgba(0,0,0,.12);}
+.cart-drawer.open{transform:translateX(0);}
+.cart-head{padding:20px 24px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.cart-head-left{display:flex;flex-direction:column;gap:4px;}
+.cart-head-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--metal-light);}
+.cart-head-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:var(--black);display:flex;align-items:center;gap:10px;}
+.cart-pill{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;background:var(--black);color:var(--white);padding:2px 8px;border-radius:20px;line-height:1.4;}
+.cart-close{width:36px;height:36px;border-radius:var(--r);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--metal);transition:all var(--sp) var(--ease);}
+.cart-close:hover{border-color:var(--black);color:var(--black);}
+.cart-close svg{width:16px;height:16px;}
+.cart-solari-bar{padding:10px 24px;background:var(--black);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.cart-solari-txt{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:3px;color:rgba(244,244,244,.3);text-transform:uppercase;}
+.cart-flash{position:absolute;top:84px;left:24px;right:24px;background:var(--black);color:var(--white);padding:12px 16px;border-radius:var(--r);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;display:flex;align-items:center;gap:10px;z-index:3;transform:translateY(-10px);opacity:0;transition:all .3s var(--ease);pointer-events:none;}
+.cart-flash.show{opacity:1;transform:translateY(0);}
+.cart-flash svg{width:14px;height:14px;}
+.cart-body{flex:1;overflow-y:auto;}
+.cart-body::-webkit-scrollbar{width:4px;}
+.cart-body::-webkit-scrollbar-thumb{background:var(--border-dark);border-radius:2px;}
+.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;padding:40px;text-align:center;}
+.cart-empty-icon{width:64px;height:64px;color:var(--border-dark);}
+.cart-empty-icon svg{width:100%;height:100%;}
+.cart-empty-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--metal-light);}
+.cart-empty-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--metal-light);letter-spacing:1px;line-height:1.6;}
+.cart-item{padding:20px 24px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:80px 1fr auto;gap:14px;align-items:start;animation:slidein .3s var(--ease);}
+@keyframes slidein{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.cart-item-img{width:80px;height:80px;background:var(--bg-tile);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cart-item-img svg{width:55%;height:55%;}
+.cart-item-cat{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--metal-light);margin-bottom:3px;}
+.cart-item-name{font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;color:var(--black);margin-bottom:8px;}
+.cart-item-qty{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:var(--r);width:fit-content;overflow:hidden;}
+.qty-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:16px;color:var(--metal);transition:background var(--sp),color var(--sp);}
+.qty-btn:hover{background:var(--black);color:var(--white);}
+.qty-val{width:32px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:var(--black);background:var(--bg-soft);line-height:28px;border-left:1px solid var(--border);border-right:1px solid var(--border);}
+.cart-item-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.cart-item-price{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;white-space:nowrap;}
+.cart-item-rm{color:var(--metal-light);display:flex;align-items:center;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:1px;transition:color var(--sp);}
+.cart-item-rm:hover{color:var(--black);}
+.cart-item-rm svg{width:12px;height:12px;}
+.cart-foot{padding:20px 24px;border-top:1.5px solid var(--border);display:flex;flex-direction:column;gap:14px;flex-shrink:0;background:var(--bg);}
+.cart-subtotal{display:flex;justify-content:space-between;align-items:center;}
+.cart-subtotal-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--metal-light);}
+.cart-subtotal-amt{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;}
+.cart-note{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--metal-light);letter-spacing:1px;text-align:center;}
+.btn-checkout{background:var(--black);color:var(--white);padding:16px 24px;border-radius:var(--r);font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;transition:background var(--sp);}
+.btn-checkout:hover{background:var(--metal-dark);}
+.btn-checkout svg{width:16px;height:16px;}
+.btn-continue{background:var(--bg-soft);color:var(--metal);padding:12px 24px;border-radius:var(--r);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;text-align:center;border:1.5px solid var(--border);width:100%;transition:all var(--sp);}
+.btn-continue:hover{border-color:var(--black);color:var(--black);}
 
-/* ═══════════════════════════════════════════
-   HERO
-═══════════════════════════════════════════ */
-.hero {
-  background: var(--c-black);
-  color: var(--c-white);
-  min-height: 80vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  overflow: hidden;
-  position: relative;
+/* ═══════════════════════════════════════
+   ADMIN BAR — barre flottante d'édition
+═══════════════════════════════════════ */
+#adminBar{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--black);color:var(--white);
+  display:flex;align-items:center;gap:4px;
+  padding:8px 12px;border-radius:40px;
+  box-shadow:0 8px 40px rgba(0,0,0,.4);
+  z-index:1000;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  border:1px solid #2a2a2a;
 }
-.hero-left {
-  padding: 80px 64px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 32px;
-  position: relative;
-  z-index: 2;
+.ab-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:30px;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(244,244,244,.5);
+  transition:all .2s;
+  white-space:nowrap;
 }
-.hero-eyebrow {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: 5px;
-  text-transform: uppercase;
-  color: rgba(244,244,244,.35);
-}
-.hero-title {
-  font-family: var(--f-label);
-  font-size: clamp(56px, 6vw, 88px);
-  letter-spacing: 4px;
-  line-height: 1;
-  color: var(--c-white);
-}
-.hero-sub {
-  font-family: var(--f-mono);
-  font-size: 13px;
-  color: rgba(244,244,244,.45);
-  line-height: 1.7;
-  max-width: 360px;
-}
-.hero-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--c-white);
-  color: var(--c-black);
-  padding: 14px 28px;
-  font-family: var(--f-mono);
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  font-weight: 700;
-  border-radius: var(--radius);
-  width: fit-content;
-  transition: background var(--speed) var(--ease), color var(--speed) var(--ease);
-}
-.hero-cta:hover { background: var(--c-bg-tile); }
-.hero-cta svg { width: 16px; height: 16px; }
+.ab-btn:hover{background:rgba(255,255,255,.08);color:var(--white);}
+.ab-btn.active{background:var(--white);color:var(--black);}
+.ab-btn svg{width:14px;height:14px;flex-shrink:0;}
+.ab-sep{width:1px;height:24px;background:rgba(255,255,255,.1);}
 
-.hero-right {
-  position: relative;
-  overflow: hidden;
+/* ═══════════════════════════════════════
+   EDIT MODE
+═══════════════════════════════════════ */
+body.edit-mode [contenteditable]{
+  outline:none;
+  box-shadow:0 0 0 1.5px rgba(0,100,255,.5);
+  border-radius:2px;
+  cursor:text;
+  transition:box-shadow .15s;
 }
-.hero-right svg { width: 100%; height: 100%; }
-
-/* Scanlines overlay */
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,.012) 3px, rgba(255,255,255,.012) 4px);
-  pointer-events: none;
-  z-index: 1;
+body.edit-mode [contenteditable]:hover{box-shadow:0 0 0 2px rgba(0,100,255,.7);}
+body.edit-mode [contenteditable]:focus{box-shadow:0 0 0 2px #0064ff;}
+/* Labels discrets en mode édition */
+body.edit-mode [contenteditable]::after{
+  content:attr(data-label);
+  display:block;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:8px;
+  letter-spacing:1px;
+  color:rgba(0,100,255,.5);
+  text-transform:uppercase;
+  pointer-events:none;
 }
 
-/* ═══════════════════════════════════════════
-   MARQUEE BAND
-═══════════════════════════════════════════ */
-.marquee-band {
-  background: var(--c-black);
-  border-top: 1px solid #1a1a1a;
-  border-bottom: 1px solid #1a1a1a;
-  overflow: hidden;
-  padding: 14px 0;
-  white-space: nowrap;
+/* ═══════════════════════════════════════
+   PANNEAU PRODUITS
+═══════════════════════════════════════ */
+#productPanel{
+  position:fixed;inset:0;z-index:500;
+  display:none;align-items:flex-start;justify-content:flex-end;
 }
-.marquee-track {
-  display: inline-flex;
-  gap: 48px;
-  animation: marquee 30s linear infinite;
+#productPanel.open{display:flex;}
+#productPanel .pOverlay{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);}
+#productPanel .pDrawer{
+  position:relative;z-index:1;
+  width:520px;height:100vh;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  box-shadow:-8px 0 40px rgba(0,0,0,.2);
+  animation:slideInR .3s var(--ease);
 }
-@keyframes marquee { to { transform: translateX(-50%); } }
-.marquee-item {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: rgba(244,244,244,.3);
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-.marquee-dot { width: 4px; height: 4px; background: rgba(244,244,244,.2); border-radius: 50%; flex-shrink: 0; }
+@keyframes slideInR{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.pHead{padding:20px 24px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.pHead-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;}
+.pClose{width:36px;height:36px;border-radius:var(--r);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--metal);transition:all .2s;}
+.pClose:hover{border-color:var(--black);color:var(--black);}
+.pClose svg{width:16px;height:16px;}
+.pBody{flex:1;overflow-y:auto;padding:24px;}
+.pBody::-webkit-scrollbar{width:4px;}
+.pBody::-webkit-scrollbar-thumb{background:var(--border-dark);}
 
-/* ═══════════════════════════════════════════
-   SECTION COMMONS
-═══════════════════════════════════════════ */
-.section {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 80px var(--gutter);
-}
-.section-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 40px;
-  padding-bottom: 20px;
-  border-bottom: 1.5px solid var(--c-border);
-}
-.section-label {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--c-metal-light);
-  margin-bottom: 8px;
-}
-.section-title {
-  font-family: var(--f-label);
-  font-size: 40px;
-  letter-spacing: 4px;
-  color: var(--c-black);
-}
-.section-link {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--c-metal);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: color var(--speed) var(--ease);
-}
-.section-link:hover { color: var(--c-black); }
-.section-link svg { width: 14px; height: 14px; }
+/* Liste produits dans le panneau */
+.p-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+.p-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--r);cursor:pointer;transition:border-color .2s;}
+.p-row:hover{border-color:var(--metal);}
+.p-row.editing{border-color:#0064ff;}
+.p-row-info{}
+.p-row-name{font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
+.p-row-meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--metal-light);letter-spacing:1px;}
+.p-row-actions{display:flex;gap:6px;}
+.p-action-btn{width:30px;height:30px;border-radius:var(--r);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--metal);transition:all .2s;}
+.p-action-btn:hover{border-color:var(--black);color:var(--black);}
+.p-action-btn.del:hover{border-color:#cc0000;color:#cc0000;}
+.p-action-btn svg{width:13px;height:13px;}
 
-/* ═══════════════════════════════════════════
-   PRODUCT CARDS
-═══════════════════════════════════════════ */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
+/* Formulaire édition produit */
+.p-form{background:var(--bg-soft);border:1.5px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:16px;display:none;}
+.p-form.open{display:block;}
+.p-form-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;margin-bottom:16px;}
+.p-field{margin-bottom:12px;}
+.p-field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--metal-light);margin-bottom:5px;}
+.p-field input,.p-field select,.p-field textarea{
+  width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);
+  padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--black);
+  outline:none;transition:border-color .2s;
 }
-.product-grid.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.p-field input:focus,.p-field select:focus,.p-field textarea:focus{border-color:#0064ff;}
+.p-field textarea{height:60px;resize:vertical;}
+.p-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.p-form-actions{display:flex;gap:8px;margin-top:16px;}
+.p-save-btn{flex:1;background:var(--black);color:var(--white);padding:10px;border-radius:var(--r);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:700;}
+.p-cancel-btn{padding:10px 16px;border-radius:var(--r);border:1.5px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--metal);transition:all .2s;}
+.p-cancel-btn:hover{border-color:var(--black);color:var(--black);}
+.p-add-btn{width:100%;background:var(--bg-soft);color:var(--metal);padding:14px;border-radius:var(--r);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;border:1.5px dashed var(--border-dark);display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;}
+.p-add-btn:hover{border-color:var(--black);color:var(--black);background:var(--bg);}
+.p-add-btn svg{width:14px;height:14px;}
 
-.product-card {
-  background: var(--c-bg);
-  border: 1.5px solid var(--c-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: border-color var(--speed) var(--ease), transform var(--speed) var(--ease);
-  cursor: pointer;
+/* ═══════════════════════════════════════
+   PANNEAU RÉGLAGES SITE
+═══════════════════════════════════════ */
+#settingsPanel{
+  position:fixed;inset:0;z-index:500;
+  display:none;align-items:flex-start;justify-content:flex-start;
 }
-.product-card:hover {
-  border-color: var(--c-black);
-  transform: translateY(-2px);
+#settingsPanel.open{display:flex;}
+#settingsPanel .sOverlay{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);}
+#settingsPanel .sDrawer{
+  position:relative;z-index:1;
+  width:360px;height:100vh;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  box-shadow:8px 0 40px rgba(0,0,0,.2);
+  animation:slideInL .3s var(--ease);
 }
+@keyframes slideInL{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.sHead{padding:20px 24px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.sHead-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;}
+.sBody{flex:1;overflow-y:auto;padding:24px;}
+.s-section{margin-bottom:28px;}
+.s-section-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--metal-light);padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.s-field{margin-bottom:12px;}
+.s-field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--metal-light);margin-bottom:5px;}
+.s-field input[type=text],.s-field input[type=number]{width:100%;background:var(--bg-soft);border:1.5px solid var(--border);border-radius:var(--r);padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--black);outline:none;}
+.s-field input:focus{border-color:#0064ff;}
+.s-apply-btn{width:100%;background:var(--black);color:var(--white);padding:12px;border-radius:var(--r);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-top:8px;}
+.s-reset-btn{width:100%;background:var(--bg-soft);color:var(--metal-light);padding:10px;border-radius:var(--r);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;border:1.5px solid var(--border);margin-top:6px;}
+/* color pickers inline */
+.color-row{display:grid;grid-template-columns:1fr 32px;gap:8px;align-items:center;}
+.color-row input[type=text]{margin:0;}
+.color-row input[type=color]{width:32px;height:32px;border:1.5px solid var(--border);border-radius:var(--r);padding:2px;cursor:pointer;}
 
-.product-image {
-  aspect-ratio: 1;
-  background: var(--c-bg-tile);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.product-image svg { width: 70%; height: 70%; }
-
-.product-tag {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: var(--c-black);
-  color: var(--c-white);
-  font-family: var(--f-mono);
-  font-size: 8px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 4px 8px;
-  border-radius: 2px;
-}
-.product-tag.new { background: var(--c-metal-dark); }
-.product-tag.sale { background: var(--c-metal); }
-
-.product-actions {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  opacity: 0;
-  transition: opacity var(--speed) var(--ease);
-  display: flex;
-  gap: 6px;
-}
-.product-card:hover .product-actions { opacity: 1; }
-
-.btn-quick-add {
-  background: var(--c-black);
-  color: var(--c-white);
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 8px 14px;
-  border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: background var(--speed) var(--ease);
-  white-space: nowrap;
-}
-.btn-quick-add:hover { background: var(--c-metal-dark); }
-.btn-quick-add svg { width: 14px; height: 14px; flex-shrink: 0; }
-
-.product-info {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 1;
-}
-.product-category {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--c-metal-light);
-}
-.product-name {
-  font-family: var(--f-display);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: .5px;
-  color: var(--c-black);
-  text-transform: uppercase;
-  line-height: 1.3;
-}
-.product-desc {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  color: var(--c-metal-light);
-  line-height: 1.5;
-  flex: 1;
-}
-.product-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--c-border);
-}
-.product-price {
-  font-family: var(--f-mono);
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--c-black);
-}
-.product-price-old {
-  font-size: 11px;
-  color: var(--c-metal-light);
-  text-decoration: line-through;
-  margin-left: 6px;
-}
-.btn-add-card {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--c-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--c-metal);
-  transition: all var(--speed) var(--ease);
-}
-.btn-add-card:hover {
-  border-color: var(--c-black);
-  background: var(--c-black);
-  color: var(--c-white);
-}
-.btn-add-card svg { width: 16px; height: 16px; }
-
-/* ═══════════════════════════════════════════
-   CATEGORY STRIP
-═══════════════════════════════════════════ */
-.category-strip {
-  background: var(--c-black);
-  color: var(--c-white);
-  padding: 60px 0;
-  overflow: hidden;
-}
-.category-strip-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 var(--gutter);
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
-}
-.cat-card {
-  background: var(--c-tile);
-  border: 1px solid #1e1e1e;
-  padding: 32px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: background var(--speed) var(--ease);
-}
-.cat-card:hover { background: var(--c-metal-dark); }
-.cat-icon { width: 48px; height: 48px; }
-.cat-icon svg { width: 100%; height: 100%; }
-.cat-name {
-  font-family: var(--f-label);
-  font-size: 22px;
-  letter-spacing: 3px;
-  color: var(--c-white);
-}
-.cat-count {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  color: rgba(244,244,244,.3);
-  letter-spacing: 2px;
-}
-.cat-arrow {
-  margin-top: auto;
-  width: 28px;
-  height: 28px;
-  border: 1px solid rgba(244,244,244,.15);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(244,244,244,.4);
-  transition: all var(--speed) var(--ease);
-}
-.cat-card:hover .cat-arrow { background: rgba(244,244,244,.1); color: var(--c-white); }
-.cat-arrow svg { width: 12px; height: 12px; }
-
-/* ═══════════════════════════════════════════
-   FEATURE BAND
-═══════════════════════════════════════════ */
-.feature-band {
-  background: var(--c-bg-soft);
-  border-top: 1.5px solid var(--c-border);
-  border-bottom: 1.5px solid var(--c-border);
-}
-.feature-band-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 32px var(--gutter);
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-}
-.feat-item {
-  padding: 20px 24px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  border-right: 1px solid var(--c-border);
-}
-.feat-item:last-child { border-right: none; }
-.feat-icon { flex-shrink: 0; width: 36px; height: 36px; color: var(--c-metal); }
-.feat-icon svg { width: 100%; height: 100%; }
-.feat-text {}
-.feat-title {
-  font-family: var(--f-display);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--c-black);
-}
-.feat-sub {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  color: var(--c-metal-light);
-  letter-spacing: 1px;
-  margin-top: 2px;
-}
-
-/* ═══════════════════════════════════════════
-   CART OVERLAY
-═══════════════════════════════════════════ */
-.cart-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.5);
-  z-index: 200;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--speed) var(--ease);
-  backdrop-filter: blur(2px);
-}
-.cart-overlay.open {
-  opacity: 1;
-  pointer-events: all;
-}
-
-/* ═══════════════════════════════════════════
-   CART DRAWER — PAGE COULISSANTE
-═══════════════════════════════════════════ */
-.cart-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: var(--cart-width);
-  background: var(--c-bg);
-  z-index: 201;
-  display: flex;
-  flex-direction: column;
-  transform: translateX(100%);
-  transition: transform .4s var(--ease);
-  box-shadow: -8px 0 40px rgba(0,0,0,.12);
-}
-.cart-drawer.open {
-  transform: translateX(0);
-}
-
-/* Header du drawer */
-.cart-head {
-  padding: 20px 24px;
-  border-bottom: 1.5px solid var(--c-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-}
-.cart-head-left {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.cart-head-label {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--c-metal-light);
-}
-.cart-head-title {
-  font-family: var(--f-label);
-  font-size: 24px;
-  letter-spacing: 3px;
-  color: var(--c-black);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.cart-count-pill {
-  font-family: var(--f-mono);
-  font-size: 11px;
-  font-weight: 700;
-  background: var(--c-black);
-  color: var(--c-white);
-  padding: 2px 8px;
-  border-radius: 20px;
-  line-height: 1.4;
-}
-.cart-close {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--c-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--c-metal);
-  transition: all var(--speed) var(--ease);
-}
-.cart-close:hover { border-color: var(--c-black); color: var(--c-black); background: var(--c-bg-soft); }
-.cart-close svg { width: 16px; height: 16px; }
-
-/* Solari inside drawer */
-.cart-solari {
-  padding: 12px 24px;
-  border-bottom: 1px solid var(--c-border);
-  background: var(--c-black);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-.cart-solari-text {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 3px;
-  color: rgba(244,244,244,.3);
-  text-transform: uppercase;
-}
-
-/* Corps du drawer */
-.cart-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0;
-}
-.cart-body::-webkit-scrollbar { width: 4px; }
-.cart-body::-webkit-scrollbar-track { background: var(--c-bg-soft); }
-.cart-body::-webkit-scrollbar-thumb { background: var(--c-border-dark); border-radius: 2px; }
-
-/* Empty state */
-.cart-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  gap: 16px;
-  padding: 40px;
-  text-align: center;
-}
-.cart-empty-icon { width: 64px; height: 64px; color: var(--c-border-dark); }
-.cart-empty-icon svg { width: 100%; height: 100%; }
-.cart-empty-title {
-  font-family: var(--f-label);
-  font-size: 22px;
-  letter-spacing: 3px;
-  color: var(--c-metal-light);
-}
-.cart-empty-sub {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  color: var(--c-metal-light);
-  letter-spacing: 1px;
-  line-height: 1.6;
-}
-
-/* Item dans le panier */
-.cart-item {
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--c-border);
-  display: grid;
-  grid-template-columns: 80px 1fr auto;
-  gap: 14px;
-  align-items: start;
-  animation: slide-in .3s var(--ease);
-}
-@keyframes slide-in {
-  from { opacity: 0; transform: translateX(20px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-.cart-item-img {
-  width: 80px;
-  height: 80px;
-  background: var(--c-bg-tile);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.cart-item-img svg { width: 55%; height: 55%; }
-
-.cart-item-info {}
-.cart-item-cat {
-  font-family: var(--f-mono);
-  font-size: 8px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--c-metal-light);
-  margin-bottom: 3px;
-}
-.cart-item-name {
-  font-family: var(--f-display);
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .5px;
-  color: var(--c-black);
-  line-height: 1.3;
-  margin-bottom: 8px;
-}
-.cart-item-qty {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  border: 1.5px solid var(--c-border);
-  border-radius: var(--radius);
-  width: fit-content;
-  overflow: hidden;
-}
-.qty-btn {
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--f-mono);
-  font-size: 16px;
-  color: var(--c-metal);
-  transition: background var(--speed) var(--ease), color var(--speed) var(--ease);
-  background: var(--c-bg);
-}
-.qty-btn:hover { background: var(--c-black); color: var(--c-white); }
-.qty-val {
-  width: 32px;
-  text-align: center;
-  font-family: var(--f-mono);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--c-black);
-  background: var(--c-bg-soft);
-  padding: 0 4px;
-  line-height: 28px;
-  border-left: 1px solid var(--c-border);
-  border-right: 1px solid var(--c-border);
-}
-
-.cart-item-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-}
-.cart-item-price {
-  font-family: var(--f-mono);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--c-black);
-  white-space: nowrap;
-}
-.cart-item-remove {
-  color: var(--c-metal-light);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-family: var(--f-mono);
-  font-size: 8px;
-  letter-spacing: 1px;
-  transition: color var(--speed) var(--ease);
-}
-.cart-item-remove:hover { color: var(--c-black); }
-.cart-item-remove svg { width: 12px; height: 12px; }
-
-/* Pied du drawer */
-.cart-foot {
-  padding: 20px 24px;
-  border-top: 1.5px solid var(--c-border);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  flex-shrink: 0;
-  background: var(--c-bg);
-}
-.cart-subtotal {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.cart-subtotal-label {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--c-metal-light);
-}
-.cart-subtotal-amount {
-  font-family: var(--f-mono);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--c-black);
-}
-.cart-note {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  color: var(--c-metal-light);
-  letter-spacing: 1px;
-  text-align: center;
-}
-.btn-checkout {
-  background: var(--c-black);
-  color: var(--c-white);
-  padding: 16px 24px;
-  border-radius: var(--radius);
-  font-family: var(--f-mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: background var(--speed) var(--ease);
-  width: 100%;
-}
-.btn-checkout:hover { background: var(--c-metal-dark); }
-.btn-checkout svg { width: 16px; height: 16px; }
-.btn-continue {
-  background: var(--c-bg-soft);
-  color: var(--c-metal);
-  padding: 12px 24px;
-  border-radius: var(--radius);
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-align: center;
-  border: 1.5px solid var(--c-border);
-  transition: all var(--speed) var(--ease);
-  width: 100%;
-}
-.btn-continue:hover { border-color: var(--c-black); color: var(--c-black); background: var(--c-bg); }
-
-/* Recently added notification (flash) */
-.cart-added-flash {
-  position: absolute;
-  top: 80px;
-  left: 24px;
-  right: 24px;
-  background: var(--c-black);
-  color: var(--c-white);
-  padding: 12px 16px;
-  border-radius: var(--radius);
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: 2px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 3;
-  transform: translateY(-10px);
-  opacity: 0;
-  transition: all .3s var(--ease);
-  pointer-events: none;
-}
-.cart-added-flash.show { opacity: 1; transform: translateY(0); }
-.cart-added-flash svg { width: 14px; height: 14px; flex-shrink: 0; color: #aaa; }
-
-/* ═══════════════════════════════════════════
-   TOAST NOTIFICATION (hors drawer)
-═══════════════════════════════════════════ */
-.toast {
-  position: fixed;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: var(--c-black);
-  color: var(--c-white);
-  padding: 14px 24px;
-  border-radius: var(--radius);
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  z-index: 300;
-  opacity: 0;
-  transition: all .4s var(--ease);
-  white-space: nowrap;
-  box-shadow: 0 8px 32px rgba(0,0,0,.2);
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.toast svg { width: 14px; height: 14px; }
-
-/* ═══════════════════════════════════════════
-   NEWSLETTER / BANNER
-═══════════════════════════════════════════ */
-.banner {
-  background: var(--c-black);
-  color: var(--c-white);
-  padding: 80px var(--gutter);
-}
-.banner-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  align-items: center;
-}
-.banner-left {}
-.banner-eyebrow {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 5px;
-  color: rgba(244,244,244,.3);
-  text-transform: uppercase;
-  margin-bottom: 16px;
-}
-.banner-title {
-  font-family: var(--f-label);
-  font-size: 52px;
-  letter-spacing: 4px;
-  line-height: 1;
-  color: var(--c-white);
-  margin-bottom: 16px;
-}
-.banner-sub {
-  font-family: var(--f-mono);
-  font-size: 11px;
-  color: rgba(244,244,244,.4);
-  line-height: 1.7;
-  letter-spacing: 1px;
-}
-.banner-right {}
-.newsletter-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.newsletter-input {
-  background: #141414;
-  border: 1.5px solid #2a2a2a;
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  font-family: var(--f-mono);
-  font-size: 12px;
-  color: var(--c-white);
-  outline: none;
-  transition: border-color var(--speed) var(--ease);
-}
-.newsletter-input::placeholder { color: rgba(244,244,244,.25); letter-spacing: 2px; }
-.newsletter-input:focus { border-color: rgba(244,244,244,.4); }
-.newsletter-btn {
-  background: var(--c-white);
-  color: var(--c-black);
-  padding: 14px 24px;
-  border-radius: var(--radius);
-  font-family: var(--f-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  transition: background var(--speed) var(--ease);
-}
-.newsletter-btn:hover { background: var(--c-bg-tile); }
-
-/* ═══════════════════════════════════════════
-   FOOTER
-═══════════════════════════════════════════ */
-.footer {
-  background: var(--c-bg-soft);
-  border-top: 1.5px solid var(--c-border);
-  padding: 60px var(--gutter) 32px;
-}
-.footer-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-.footer-top {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 48px;
-  padding-bottom: 48px;
-  border-bottom: 1px solid var(--c-border);
-}
-.footer-brand {}
-.footer-brand-sub {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  color: var(--c-metal-light);
-  letter-spacing: 2px;
-  margin-top: 12px;
-  line-height: 1.7;
-  max-width: 240px;
-}
-.footer-col {}
-.footer-col-title {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--c-black);
-  font-weight: 700;
-  margin-bottom: 16px;
-}
-.footer-links {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.footer-links a {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  color: var(--c-metal-light);
-  letter-spacing: 1px;
-  transition: color var(--speed) var(--ease);
-}
-.footer-links a:hover { color: var(--c-black); }
-.footer-bottom {
-  padding-top: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.footer-copy {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  color: var(--c-metal-light);
-  letter-spacing: 2px;
-}
-.footer-legal {
-  display: flex;
-  gap: 24px;
-}
-.footer-legal a {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  color: var(--c-metal-light);
-  letter-spacing: 1px;
-  transition: color var(--speed) var(--ease);
-}
-.footer-legal a:hover { color: var(--c-black); }
-
-/* ═══════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════ */
-@media (max-width: 1100px) {
-  .product-grid { grid-template-columns: repeat(3, 1fr); }
-  .footer-top { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 768px) {
-  :root { --cart-width: 100vw; }
-  .hero { grid-template-columns: 1fr; }
-  .hero-right { display: none; }
-  .hero-left { padding: 60px var(--gutter); }
-  .product-grid { grid-template-columns: repeat(2, 1fr); }
-  .category-strip-inner { grid-template-columns: repeat(2, 1fr); }
-  .feature-band-inner { grid-template-columns: repeat(2, 1fr); }
-  .banner-inner { grid-template-columns: 1fr; gap: 32px; }
-  .header-nav { display: none; }
-  .footer-top { grid-template-columns: 1fr; gap: 32px; }
-  .section { padding: 48px var(--gutter); }
-}
-
-/* ═══════════════════════════════════════════
-   FILTERS
-═══════════════════════════════════════════ */
-.filters {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 32px;
-}
-.filter-btn {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1.5px solid var(--c-border);
-  color: var(--c-metal);
-  background: var(--c-bg);
-  transition: all var(--speed) var(--ease);
-  cursor: pointer;
-}
-.filter-btn:hover { border-color: var(--c-metal); color: var(--c-black); }
-.filter-btn.active {
-  background: var(--c-black);
-  color: var(--c-white);
-  border-color: var(--c-black);
-}
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){.product-grid{grid-template-columns:repeat(3,1fr)}.footer-top{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){:root{--cart-w:100vw}.hero{grid-template-columns:1fr}.hero-right{display:none}.hero-left{padding:60px 24px}.product-grid{grid-template-columns:repeat(2,1fr)}.cat-inner{grid-template-columns:repeat(2,1fr)}.feat-inner{grid-template-columns:repeat(2,1fr)}.nl-inner{grid-template-columns:1fr;gap:32px}.header-nav{display:none}.footer-top{grid-template-columns:1fr;gap:32px}}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════ TOPBAR ═══════════════════ -->
-<div class="topbar">
-  Livraison offerte dès 80€ · Retours gratuits 30 jours · Accessoires certifiés TSA
-</div>
+<!-- TOPBAR -->
+<div class="topbar"><span contenteditable="false" data-key="topbar">Livraison offerte dès 80€ · Retours gratuits 30 jours · Accessoires certifiés TSA</span></div>
 
-<!-- ═══════════════════ HEADER ═══════════════════ -->
+<!-- HEADER -->
 <header class="header">
   <div class="header-inner">
-    <a href="#" class="header-logo">
-      <div class="solari sm">
-        <div class="s-tile"><span class="s-letter">T</span></div>
-        <div class="s-tile"><span class="s-letter">E</span></div>
-        <div class="s-tile"><span class="s-letter">R</span></div>
-        <div class="s-tile"><span class="s-letter">M</span></div>
-        <div class="s-tile"><span class="s-letter">I</span></div>
-        <div class="s-tile"><span class="s-letter">N</span></div>
-        <div class="s-tile"><span class="s-letter">A</span></div>
-        <div class="s-tile"><span class="s-letter">L</span></div>
-      </div>
+    <a href="#" class="header-logo" id="siteLogo">
+      <div class="solari sm" id="logoTiles"></div>
     </a>
-
     <nav class="header-nav">
       <a href="#" class="active">Boutique</a>
       <a href="#">Bagages</a>
       <a href="#">Accessoires</a>
       <a href="#">Électronique</a>
       <a href="#">Confort</a>
-      <a href="#">Soldes</a>
     </nav>
-
     <div class="header-actions">
-      <button class="btn-icon" aria-label="Recherche">
-        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35" stroke-linecap="round"/></svg>
-      </button>
-      <button class="btn-icon" aria-label="Compte">
-        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-linecap="round"/></svg>
-      </button>
-      <button class="btn-icon" id="cartToggle" aria-label="Panier" onclick="openCart()">
+      <button class="btn-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35" stroke-linecap="round"/></svg></button>
+      <button class="btn-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-linecap="round"/></svg></button>
+      <button class="btn-icon" onclick="openCart()">
         <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span class="cart-badge" id="cartBadge">0</span>
       </button>
@@ -1235,138 +407,61 @@ ul { list-style: none; }
   </div>
 </header>
 
-<!-- ═══════════════════ HERO ═══════════════════ -->
+<!-- HERO -->
 <section class="hero">
   <div class="hero-left">
-    <div class="hero-eyebrow">Collection 2026 · Nouveautés</div>
-    <h1 class="hero-title">READY<br>TO<br>BOARD</h1>
-    <p class="hero-sub">Des accessoires de voyage conçus pour les terminaux du monde entier. Chaque détail pensé pour votre prochain départ.</p>
+    <div class="hero-eyebrow" contenteditable="false" data-key="heroEyebrow">Collection 2026 · Nouveautés</div>
+    <h1 class="hero-title" contenteditable="false" data-key="heroTitle">READY<br>TO<br>BOARD</h1>
+    <p class="hero-sub" contenteditable="false" data-key="heroSub">Des accessoires de voyage conçus pour les terminaux du monde entier. Chaque détail pensé pour votre prochain départ.</p>
     <a href="#products" class="hero-cta">
-      Découvrir la collection
-      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span contenteditable="false" data-key="heroCta">Découvrir la collection</span>
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg>
     </a>
   </div>
-
   <div class="hero-right">
     <svg viewBox="0 0 700 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <!-- Fond noir -->
       <rect width="700" height="600" fill="#0a0a0a"/>
-      <!-- Grand tableau Solari en perspective -->
       <g transform="translate(40,60)">
-        <!-- Header panneau -->
         <rect x="0" y="0" width="620" height="50" fill="#141414"/>
         <rect x="0" y="49" width="620" height="1.5" fill="#f4f4f4" opacity=".15"/>
-        <text x="20" y="32" font-family="'IBM Plex Mono',monospace" font-size="11" fill="rgba(244,244,244,.7)" letter-spacing="5">DÉPARTS / DEPARTURES</text>
-        <text x="500" y="32" font-family="'IBM Plex Mono',monospace" font-size="18" fill="rgba(244,244,244,.9)" font-weight="700">08:42</text>
-
-        <!-- Col headers -->
+        <text x="20" y="32" font-family="IBM Plex Mono,monospace" font-size="11" fill="rgba(244,244,244,.7)" letter-spacing="5">DÉPARTS / DEPARTURES</text>
+        <text x="500" y="32" font-family="IBM Plex Mono,monospace" font-size="18" fill="rgba(244,244,244,.9)" font-weight="700" id="heroClock">08:42</text>
         <rect x="0" y="50" width="620" height="30" fill="#0f0f0f"/>
-        <text x="20" y="70" font-family="'IBM Plex Mono',monospace" font-size="8" fill="rgba(244,244,244,.25)" letter-spacing="3">DESTINATION</text>
-        <text x="280" y="70" font-family="'IBM Plex Mono',monospace" font-size="8" fill="rgba(244,244,244,.25)" letter-spacing="3">VOL</text>
-        <text x="370" y="70" font-family="'IBM Plex Mono',monospace" font-size="8" fill="rgba(244,244,244,.25)" letter-spacing="3">HEURE</text>
-        <text x="460" y="70" font-family="'IBM Plex Mono',monospace" font-size="8" fill="rgba(244,244,244,.25)" letter-spacing="3">PORTE</text>
-        <text x="530" y="70" font-family="'IBM Plex Mono',monospace" font-size="8" fill="rgba(244,244,244,.25)" letter-spacing="3">STATUT</text>
-
-        <!-- Lignes produits via tiles -->
-        <!-- Row 1 — active, tuiles noires avec hinge -->
+        <text x="20" y="70" font-family="IBM Plex Mono,monospace" font-size="8" fill="rgba(244,244,244,.25)" letter-spacing="3">DESTINATION</text>
+        <text x="280" y="70" font-family="IBM Plex Mono,monospace" font-size="8" fill="rgba(244,244,244,.25)" letter-spacing="3">VOL</text>
+        <text x="370" y="70" font-family="IBM Plex Mono,monospace" font-size="8" fill="rgba(244,244,244,.25)" letter-spacing="3">HEURE</text>
+        <text x="530" y="70" font-family="IBM Plex Mono,monospace" font-size="8" fill="rgba(244,244,244,.25)" letter-spacing="3">STATUT</text>
+        <!-- Row 1 -->
         <rect x="0" y="80" width="620" height="56" fill="#141414"/>
-        <!-- tiles PARIS CDG -->
-        <g>
-          <rect x="10" y="86" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#222" stroke-width=".5"/>
-          <line x1="10" y1="108" x2="44" y2="108" stroke="#141414" stroke-width="1.5"/>
-          <text x="27" y="114" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">P</text>
-          <rect x="48" y="86" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#222" stroke-width=".5"/>
-          <line x1="48" y1="108" x2="82" y2="108" stroke="#141414" stroke-width="1.5"/>
-          <text x="65" y="114" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">A</text>
-          <rect x="86" y="86" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#222" stroke-width=".5"/>
-          <line x1="86" y1="108" x2="120" y2="108" stroke="#141414" stroke-width="1.5"/>
-          <text x="103" y="114" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">R</text>
-          <rect x="124" y="86" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#222" stroke-width=".5"/>
-          <line x1="124" y1="108" x2="158" y2="108" stroke="#141414" stroke-width="1.5"/>
-          <text x="141" y="114" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">I</text>
-          <rect x="162" y="86" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#222" stroke-width=".5"/>
-          <line x1="162" y1="108" x2="196" y2="108" stroke="#141414" stroke-width="1.5"/>
-          <text x="179" y="114" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">S</text>
-        </g>
-        <text x="280" y="114" font-family="'IBM Plex Mono',monospace" font-size="14" fill="rgba(244,244,244,.5)">TM004</text>
-        <text x="370" y="114" font-family="'IBM Plex Mono',monospace" font-size="18" font-weight="700" fill="#f4f4f4">09:15</text>
-        <text x="460" y="114" font-family="'IBM Plex Mono',monospace" font-size="16" fill="rgba(244,244,244,.6)">A12</text>
-        <rect x="528" y="90" width="78" height="22" rx="2" fill="#f4f4f4"/>
-        <text x="567" y="105" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="8" font-weight="700" fill="#0a0a0a" letter-spacing="1">ON TIME</text>
-
+        <g><rect x="10" y="86" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#222" stroke-width=".5"/><line x1="10" y1="108" x2="44" y2="108" stroke="#141414" stroke-width="1.5"/><text x="27" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">P</text><rect x="48" y="86" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#222" stroke-width=".5"/><line x1="48" y1="108" x2="82" y2="108" stroke="#141414" stroke-width="1.5"/><text x="65" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">A</text><rect x="86" y="86" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#222" stroke-width=".5"/><line x1="86" y1="108" x2="120" y2="108" stroke="#141414" stroke-width="1.5"/><text x="103" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">R</text><rect x="124" y="86" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#222" stroke-width=".5"/><line x1="124" y1="108" x2="158" y2="108" stroke="#141414" stroke-width="1.5"/><text x="141" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">I</text><rect x="162" y="86" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#222" stroke-width=".5"/><line x1="162" y1="108" x2="196" y2="108" stroke="#141414" stroke-width="1.5"/><text x="179" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">S</text></g>
+        <text x="280" y="114" font-family="IBM Plex Mono,monospace" font-size="14" fill="rgba(244,244,244,.5)">TM004</text>
+        <text x="370" y="114" font-family="IBM Plex Mono,monospace" font-size="18" font-weight="700" fill="#f4f4f4">09:15</text>
+        <rect x="528" y="90" width="78" height="22" rx="2" fill="#f4f4f4"/><text x="567" y="105" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8" font-weight="700" fill="#0a0a0a" letter-spacing="1">ON TIME</text>
         <line x1="0" y1="136" x2="620" y2="136" stroke="#1a1a1a" stroke-width="1"/>
-
         <!-- Row 2 -->
         <rect x="0" y="136" width="620" height="56" fill="#111"/>
-        <g opacity=".9">
-          <rect x="10" y="142" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#1e1e1e" stroke-width=".5"/>
-          <line x1="10" y1="164" x2="44" y2="164" stroke="#111" stroke-width="1.5"/>
-          <text x="27" y="170" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">D</text>
-          <rect x="48" y="142" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#1e1e1e" stroke-width=".5"/>
-          <line x1="48" y1="164" x2="82" y2="164" stroke="#111" stroke-width="1.5"/>
-          <text x="65" y="170" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">U</text>
-          <rect x="86" y="142" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#1e1e1e" stroke-width=".5"/>
-          <line x1="86" y1="164" x2="120" y2="164" stroke="#111" stroke-width="1.5"/>
-          <text x="103" y="170" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">B</text>
-          <rect x="124" y="142" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#1e1e1e" stroke-width=".5"/>
-          <line x1="124" y1="164" x2="158" y2="164" stroke="#111" stroke-width="1.5"/>
-          <text x="141" y="170" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">A</text>
-          <rect x="162" y="142" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#1e1e1e" stroke-width=".5"/>
-          <line x1="162" y1="164" x2="196" y2="164" stroke="#111" stroke-width="1.5"/>
-          <text x="179" y="170" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="#f4f4f4">I</text>
-        </g>
-        <text x="280" y="170" font-family="'IBM Plex Mono',monospace" font-size="14" fill="rgba(244,244,244,.4)">TM017</text>
-        <text x="370" y="170" font-family="'IBM Plex Mono',monospace" font-size="18" font-weight="700" fill="rgba(244,244,244,.8)">10:40</text>
-        <text x="460" y="170" font-family="'IBM Plex Mono',monospace" font-size="16" fill="rgba(244,244,244,.5)">C08</text>
-        <rect x="528" y="146" width="78" height="22" rx="2" fill="rgba(244,244,244,.12)" stroke="rgba(244,244,244,.15)" stroke-width="1"/>
-        <text x="567" y="161" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="8" font-weight="700" fill="rgba(244,244,244,.6)" letter-spacing="1">ON TIME</text>
-
+        <text x="20" y="170" font-family="IBM Plex Sans,sans-serif" font-size="20" font-weight="900" fill="rgba(244,244,244,.8)" letter-spacing="1">DUBAI</text>
+        <text x="280" y="170" font-family="IBM Plex Mono,monospace" font-size="14" fill="rgba(244,244,244,.4)">TM017</text>
+        <text x="370" y="170" font-family="IBM Plex Mono,monospace" font-size="18" font-weight="700" fill="rgba(244,244,244,.8)">10:40</text>
+        <rect x="528" y="146" width="78" height="22" rx="2" fill="rgba(244,244,244,.12)" stroke="rgba(244,244,244,.15)" stroke-width="1"/><text x="567" y="161" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8" font-weight="700" fill="rgba(244,244,244,.6)" letter-spacing="1">ON TIME</text>
         <line x1="0" y1="192" x2="620" y2="192" stroke="#1a1a1a" stroke-width="1"/>
-
-        <!-- Row 3 — en cours flip -->
-        <rect x="0" y="192" width="620" height="56" fill="#0e0e0e" opacity=".7"/>
-        <g opacity=".5">
-          <rect x="10" y="198" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#1a1a1a" stroke-width=".5"/>
-          <line x1="10" y1="220" x2="44" y2="220" stroke="#0e0e0e" stroke-width="1.5"/>
-          <text x="27" y="226" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="rgba(244,244,244,.6)">T</text>
-          <rect x="48" y="198" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#1a1a1a" stroke-width=".5"/>
-          <line x1="48" y1="220" x2="82" y2="220" stroke="#0e0e0e" stroke-width="1.5"/>
-          <text x="65" y="226" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="rgba(244,244,244,.6)">O</text>
-          <rect x="86" y="198" width="34" height="44" rx="3" fill="#0a0a0a" stroke="#1a1a1a" stroke-width=".5"/>
-          <line x1="86" y1="220" x2="120" y2="220" stroke="#0e0e0e" stroke-width="1.5"/>
-          <text x="103" y="226" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="20" font-weight="900" fill="rgba(244,244,244,.6)">K</text>
-        </g>
-        <text x="280" y="226" font-family="'IBM Plex Mono',monospace" font-size="14" fill="rgba(244,244,244,.2)">TM031</text>
-        <text x="370" y="226" font-family="'IBM Plex Mono',monospace" font-size="18" font-weight="700" fill="rgba(244,244,244,.4)">13:25</text>
-        <text x="460" y="226" font-family="'IBM Plex Mono',monospace" font-size="16" fill="rgba(244,244,244,.3)">B17</text>
-
+        <!-- Row 3 -->
+        <text x="20" y="226" font-family="IBM Plex Sans,sans-serif" font-size="20" font-weight="900" fill="rgba(244,244,244,.4)" letter-spacing="1">TOKYO</text>
+        <text x="370" y="226" font-family="IBM Plex Mono,monospace" font-size="18" fill="rgba(244,244,244,.4)">13:25</text>
         <line x1="0" y1="248" x2="620" y2="248" stroke="#151515" stroke-width="1"/>
-
-        <!-- Row 4 -->
-        <rect x="0" y="248" width="620" height="56" fill="#0a0a0a" opacity=".5"/>
-        <text x="20" y="282" font-family="'IBM Plex Sans',sans-serif" font-size="18" font-weight="900" fill="rgba(244,244,244,.2)" letter-spacing="1">LONDON</text>
-        <text x="370" y="282" font-family="'IBM Plex Mono',monospace" font-size="18" fill="rgba(244,244,244,.2)">14:55</text>
-        <text x="460" y="282" font-family="'IBM Plex Mono',monospace" font-size="16" fill="rgba(244,244,244,.15)">A04</text>
-
+        <text x="20" y="282" font-family="IBM Plex Sans,sans-serif" font-size="20" font-weight="900" fill="rgba(244,244,244,.15)" letter-spacing="1">LONDON</text>
+        <text x="370" y="282" font-family="IBM Plex Mono,monospace" font-size="18" fill="rgba(244,244,244,.15)">14:55</text>
         <line x1="0" y1="304" x2="620" y2="304" stroke="#111" stroke-width="1"/>
-
-        <!-- Row 5 — très estompé -->
-        <rect x="0" y="304" width="620" height="56" fill="#080808" opacity=".4"/>
-        <text x="20" y="338" font-family="'IBM Plex Sans',sans-serif" font-size="18" font-weight="900" fill="rgba(244,244,244,.08)" letter-spacing="1">SYDNEY</text>
-        <text x="370" y="338" font-family="'IBM Plex Mono',monospace" font-size="18" fill="rgba(244,244,244,.08)">22:10</text>
-
-        <!-- Brand + tagline -->
         <rect x="0" y="380" width="620" height="60" fill="#0a0a0a"/>
-        <line x1="0" y1="380" x2="620" y2="380" stroke="#222" stroke-width="1"/>
-        <text x="20" y="414" font-family="'Bebas Neue',sans-serif" font-size="32" fill="rgba(244,244,244,.08)" letter-spacing="10">TERMINAL · ACCESSOIRES DE VOYAGE</text>
+        <text x="20" y="414" font-family="Bebas Neue,sans-serif" font-size="32" fill="rgba(244,244,244,.06)" letter-spacing="10">TERMINAL · ACCESSOIRES DE VOYAGE</text>
       </g>
     </svg>
   </div>
 </section>
 
-<!-- ═══════════════════ MARQUEE ═══════════════════ -->
+<!-- MARQUEE -->
 <div class="marquee-band">
-  <div class="marquee-track" id="marqueeTrack">
+  <div class="marquee-track">
     <span class="marquee-item">Bagages cabine<span class="marquee-dot"></span></span>
     <span class="marquee-item">Valises hardshell<span class="marquee-dot"></span></span>
     <span class="marquee-item">Accessoires TSA<span class="marquee-dot"></span></span>
@@ -1374,7 +469,6 @@ ul { list-style: none; }
     <span class="marquee-item">Confort en vol<span class="marquee-dot"></span></span>
     <span class="marquee-item">Protection bagages<span class="marquee-dot"></span></span>
     <span class="marquee-item">Électronique voyage<span class="marquee-dot"></span></span>
-    <span class="marquee-item">Organisateurs<span class="marquee-dot"></span></span>
     <span class="marquee-item">Bagages cabine<span class="marquee-dot"></span></span>
     <span class="marquee-item">Valises hardshell<span class="marquee-dot"></span></span>
     <span class="marquee-item">Accessoires TSA<span class="marquee-dot"></span></span>
@@ -1382,130 +476,35 @@ ul { list-style: none; }
     <span class="marquee-item">Confort en vol<span class="marquee-dot"></span></span>
     <span class="marquee-item">Protection bagages<span class="marquee-dot"></span></span>
     <span class="marquee-item">Électronique voyage<span class="marquee-dot"></span></span>
-    <span class="marquee-item">Organisateurs<span class="marquee-dot"></span></span>
   </div>
 </div>
 
-<!-- ═══════════════════ FEATURE BAND ═══════════════════ -->
-<div class="feature-band">
-  <div class="feature-band-inner">
-    <div class="feat-item">
-      <div class="feat-icon">
-        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg>
-      </div>
-      <div class="feat-text">
-        <div class="feat-title">Livraison express</div>
-        <div class="feat-sub">48h · Offerte dès 80€</div>
-      </div>
-    </div>
-    <div class="feat-item">
-      <div class="feat-icon">
-        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
-      </div>
-      <div class="feat-text">
-        <div class="feat-title">Certifié TSA</div>
-        <div class="feat-sub">Conforme tous aéroports</div>
-      </div>
-    </div>
-    <div class="feat-item">
-      <div class="feat-icon">
-        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3z"/></svg>
-      </div>
-      <div class="feat-text">
-        <div class="feat-title">Paiement sécurisé</div>
-        <div class="feat-sub">Toutes cartes acceptées</div>
-      </div>
-    </div>
-    <div class="feat-item">
-      <div class="feat-icon">
-        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-      </div>
-      <div class="feat-text">
-        <div class="feat-title">Retours 30 jours</div>
-        <div class="feat-sub">Satisfait ou remboursé</div>
-      </div>
-    </div>
+<!-- FEATURES -->
+<div class="feat-band">
+  <div class="feat-inner">
+    <div class="feat-item"><div class="feat-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg></div><div><div class="feat-title" contenteditable="false" data-key="feat1t">Livraison express</div><div class="feat-sub" contenteditable="false" data-key="feat1s">48h · Offerte dès 80€</div></div></div>
+    <div class="feat-item"><div class="feat-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg></div><div><div class="feat-title" contenteditable="false" data-key="feat2t">Certifié TSA</div><div class="feat-sub" contenteditable="false" data-key="feat2s">Conforme tous aéroports</div></div></div>
+    <div class="feat-item"><div class="feat-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3z"/></svg></div><div><div class="feat-title" contenteditable="false" data-key="feat3t">Paiement sécurisé</div><div class="feat-sub" contenteditable="false" data-key="feat3s">Toutes cartes acceptées</div></div></div>
+    <div class="feat-item"><div class="feat-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div><div class="feat-title" contenteditable="false" data-key="feat4t">Retours 30 jours</div><div class="feat-sub" contenteditable="false" data-key="feat4s">Satisfait ou remboursé</div></div></div>
   </div>
 </div>
 
-<!-- ═══════════════════ CATÉGORIES ═══════════════════ -->
-<div class="category-strip">
-  <div class="category-strip-inner">
-    <div class="cat-card">
-      <div class="cat-icon">
-        <svg fill="none" stroke="rgba(244,244,244,.5)" stroke-width="1.5" viewBox="0 0 48 48">
-          <rect x="8" y="14" width="32" height="26" rx="4"/>
-          <path d="M18 14v-3a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"/>
-          <line x1="8" y1="24" x2="40" y2="24"/>
-          <circle cx="24" cy="28" r="2" fill="rgba(244,244,244,.5)"/>
-        </svg>
-      </div>
-      <div class="cat-name">VALISES</div>
-      <div class="cat-count">24 PRODUITS</div>
-      <div class="cat-arrow">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg>
-      </div>
-    </div>
-    <div class="cat-card">
-      <div class="cat-icon">
-        <svg fill="none" stroke="rgba(244,244,244,.5)" stroke-width="1.5" viewBox="0 0 48 48">
-          <path d="M24 6l16 28H8z"/>
-          <path d="M24 6l-8 14h16L24 6z" stroke-width="1"/>
-          <circle cx="24" cy="36" r="4"/>
-        </svg>
-      </div>
-      <div class="cat-name">SACS</div>
-      <div class="cat-count">18 PRODUITS</div>
-      <div class="cat-arrow">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg>
-      </div>
-    </div>
-    <div class="cat-card">
-      <div class="cat-icon">
-        <svg fill="none" stroke="rgba(244,244,244,.5)" stroke-width="1.5" viewBox="0 0 48 48">
-          <rect x="10" y="18" width="28" height="18" rx="6"/>
-          <path d="M14 18v-3a4 4 0 0 1 8 0v3"/>
-          <path d="M26 18v-3a4 4 0 0 1 8 0v3"/>
-          <circle cx="24" cy="27" r="2" fill="rgba(244,244,244,.5)"/>
-        </svg>
-      </div>
-      <div class="cat-name">ACCÈS</div>
-      <div class="cat-count">32 PRODUITS</div>
-      <div class="cat-arrow">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg>
-      </div>
-    </div>
-    <div class="cat-card">
-      <div class="cat-icon">
-        <svg fill="none" stroke="rgba(244,244,244,.5)" stroke-width="1.5" viewBox="0 0 48 48">
-          <path d="M12 36 Q12 20 24 18 Q36 20 36 36"/>
-          <rect x="6" y="30" width="12" height="16" rx="5"/>
-          <rect x="30" y="30" width="12" height="16" rx="5"/>
-          <path d="M24 36 Q26 42 28 44" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="cat-name">CONFORT</div>
-      <div class="cat-count">16 PRODUITS</div>
-      <div class="cat-arrow">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg>
-      </div>
-    </div>
+<!-- CATÉGORIES -->
+<div class="cat-strip">
+  <div class="cat-inner">
+    <div class="cat-card"><div class="cat-icon"><svg fill="none" stroke="rgba(244,244,244,.5)" stroke-width="1.5" viewBox="0 0 48 48"><rect x="8" y="14" width="32" height="26" rx="4"/><path d="M18 14v-3a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"/><circle cx="24" cy="28" r="2" fill="rgba(244,244,244,.5)"/></svg></div><div class="cat-name" contenteditable="false" data-key="cat1n">VALISES</div><div class="cat-count" contenteditable="false" data-key="cat1c">24 PRODUITS</div><div class="cat-arrow"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg></div></div>
+    <div class="cat-card"><div class="cat-icon"><svg fill="none" stroke="rgba(244,244,244,.5)" stroke-width="1.5" viewBox="0 0 48 48"><rect x="10" y="16" width="28" height="22" rx="6"/><path d="M18 16v-4a6 6 0 0 1 12 0v4"/></svg></div><div class="cat-name" contenteditable="false" data-key="cat2n">SACS</div><div class="cat-count" contenteditable="false" data-key="cat2c">18 PRODUITS</div><div class="cat-arrow"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg></div></div>
+    <div class="cat-card"><div class="cat-icon"><svg fill="none" stroke="rgba(244,244,244,.5)" stroke-width="1.5" viewBox="0 0 48 48"><rect x="10" y="18" width="28" height="18" rx="6"/><path d="M14 18v-3a4 4 0 0 1 8 0v3"/><path d="M26 18v-3a4 4 0 0 1 8 0v3"/></svg></div><div class="cat-name" contenteditable="false" data-key="cat3n">ACCÈS</div><div class="cat-count" contenteditable="false" data-key="cat3c">32 PRODUITS</div><div class="cat-arrow"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg></div></div>
+    <div class="cat-card"><div class="cat-icon"><svg fill="none" stroke="rgba(244,244,244,.5)" stroke-width="1.5" viewBox="0 0 48 48"><path d="M12 36 Q12 20 24 18 Q36 20 36 36"/><rect x="6" y="30" width="12" height="16" rx="5"/><rect x="30" y="30" width="12" height="16" rx="5"/></svg></div><div class="cat-name" contenteditable="false" data-key="cat4n">CONFORT</div><div class="cat-count" contenteditable="false" data-key="cat4c">16 PRODUITS</div><div class="cat-arrow"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg></div></div>
   </div>
 </div>
 
-<!-- ═══════════════════ PRODUITS ═══════════════════ -->
+<!-- PRODUITS -->
 <div class="section" id="products">
   <div class="section-header">
-    <div>
-      <div class="section-label">Collection 2026</div>
-      <div class="section-title">NOUVEAUTÉS</div>
-    </div>
-    <a href="#" class="section-link">
-      Tout voir
-      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg>
-    </a>
+    <div><div class="section-label" contenteditable="false" data-key="prodLabel">Collection 2026</div><div class="section-title" contenteditable="false" data-key="prodTitle">NOUVEAUTÉS</div></div>
+    <a href="#" class="section-link">Tout voir <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg></a>
   </div>
-
   <div class="filters">
     <button class="filter-btn active" onclick="filterProducts(this,'all')">Tous</button>
     <button class="filter-btn" onclick="filterProducts(this,'bagages')">Bagages</button>
@@ -1513,650 +512,524 @@ ul { list-style: none; }
     <button class="filter-btn" onclick="filterProducts(this,'electronique')">Électronique</button>
     <button class="filter-btn" onclick="filterProducts(this,'confort')">Confort</button>
   </div>
+  <div class="product-grid" id="productGrid"></div>
+</div>
 
-  <div class="product-grid" id="productGrid">
-
-    <!-- Produit 1 -->
-    <div class="product-card" data-cat="bagages">
-      <div class="product-image">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="50" y="40" width="100" height="130" rx="8" stroke="#2a2a2a" stroke-width="1.5"/>
-          <line x1="50" y1="90" x2="150" y2="90" stroke="#e0e0e0" stroke-width="1"/>
-          <line x1="50" y1="115" x2="150" y2="115" stroke="#e0e0e0" stroke-width="1"/>
-          <path d="M80 40 Q80 26 100 26 Q120 26 120 40" stroke="#2a2a2a" stroke-width="2.5" stroke-linecap="round"/>
-          <rect x="88" y="98" width="24" height="18" rx="2" fill="#2a2a2a"/>
-          <rect x="60" y="171" width="16" height="8" rx="4" fill="#2a2a2a"/>
-          <rect x="124" y="171" width="16" height="8" rx="4" fill="#2a2a2a"/>
-        </svg>
-        <span class="product-tag new">Nouveau</span>
-        <div class="product-actions">
-          <button class="btn-quick-add" onclick="addToCart(event, 1)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-            Ajouter
-          </button>
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Bagages · Cabine</div>
-        <div class="product-name">Hardshell Pro S</div>
-        <div class="product-desc">Polycarbonate renforcé · 4 roues silencieuses · Serrure TSA</div>
-        <div class="product-footer">
-          <div>
-            <span class="product-price">89 €</span>
-          </div>
-          <button class="btn-add-card" onclick="addToCart(event, 1)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Produit 2 -->
-    <div class="product-card" data-cat="bagages">
-      <div class="product-image">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="40" y="50" width="120" height="110" rx="10" stroke="#2a2a2a" stroke-width="1.5"/>
-          <line x1="40" y1="95" x2="160" y2="95" stroke="#e0e0e0" stroke-width="1"/>
-          <path d="M76 50 Q76 34 100 34 Q124 34 124 50" stroke="#2a2a2a" stroke-width="2.5" stroke-linecap="round"/>
-          <rect x="86" y="102" width="28" height="20" rx="3" fill="#2a2a2a"/>
-          <rect x="55" y="160" width="18" height="9" rx="4.5" fill="#2a2a2a"/>
-          <rect x="127" y="160" width="18" height="9" rx="4.5" fill="#2a2a2a"/>
-          <line x1="40" y1="120" x2="160" y2="120" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="4 2"/>
-        </svg>
-        <span class="product-tag">Best-seller</span>
-        <div class="product-actions">
-          <button class="btn-quick-add" onclick="addToCart(event, 2)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-            Ajouter
-          </button>
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Bagages · Soute</div>
-        <div class="product-name">Hardshell Pro M</div>
-        <div class="product-desc">66cm · 75L · Polycarbonate mat · Extension zip</div>
-        <div class="product-footer">
-          <div>
-            <span class="product-price">129 €</span>
-          </div>
-          <button class="btn-add-card" onclick="addToCart(event, 2)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Produit 3 -->
-    <div class="product-card" data-cat="accessoires">
-      <div class="product-image" style="background:#f8f8f8;">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="50" y="65" width="100" height="80" rx="8" stroke="#2a2a2a" stroke-width="1.5"/>
-          <rect x="62" y="77" width="76" height="56" rx="4" stroke="#e0e0e0" stroke-width="1"/>
-          <rect x="44" y="90" width="8" height="18" rx="3" fill="#2a2a2a"/>
-          <text x="100" y="108" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="700" fill="#2a2a2a" letter-spacing="2">TSA</text>
-          <path d="M86 65 Q86 54 100 54 Q114 54 114 65" stroke="#2a2a2a" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="100" cy="54" r="4" fill="#2a2a2a"/>
-        </svg>
-        <span class="product-tag new">Nouveau</span>
-        <div class="product-actions">
-          <button class="btn-quick-add" onclick="addToCart(event, 3)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-            Ajouter
-          </button>
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Accessoires · Sécurité</div>
-        <div class="product-name">Cadenas TSA Pro</div>
-        <div class="product-desc">Combinaison 3 chiffres · Acier inoxydable · Certifié TSA</div>
-        <div class="product-footer">
-          <div>
-            <span class="product-price">19 €</span>
-          </div>
-          <button class="btn-add-card" onclick="addToCart(event, 3)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Produit 4 -->
-    <div class="product-card" data-cat="electronique">
-      <div class="product-image">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="44" y="70" width="112" height="64" rx="10" stroke="#2a2a2a" stroke-width="1.5"/>
-          <rect x="155" y="88" width="8" height="16" rx="3" fill="#2a2a2a"/>
-          <rect x="56" y="84" width="70" height="36" rx="3" stroke="#e0e0e0" stroke-width="1"/>
-          <rect x="58" y="86" width="12" height="32" rx="2" fill="#2a2a2a"/>
-          <rect x="72" y="86" width="12" height="32" rx="2" fill="#2a2a2a"/>
-          <rect x="86" y="86" width="12" height="32" rx="2" fill="#2a2a2a"/>
-          <rect x="100" y="86" width="8" height="32" rx="2" fill="#e8e8e8"/>
-          <text x="100" y="150" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="8" fill="#8a8a8a" letter-spacing="1">20,000 mAh</text>
-        </svg>
-        <div class="product-actions">
-          <button class="btn-quick-add" onclick="addToCart(event, 4)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-            Ajouter
-          </button>
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Électronique · Énergie</div>
-        <div class="product-name">Power Bank 20K</div>
-        <div class="product-desc">20 000 mAh · USB-C 65W · 2× USB-A · Compact</div>
-        <div class="product-footer">
-          <div>
-            <span class="product-price">49 €</span>
-            <span class="product-price-old">65 €</span>
-          </div>
-          <button class="btn-add-card" onclick="addToCart(event, 4)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Produit 5 -->
-    <div class="product-card" data-cat="confort">
-      <div class="product-image" style="background:#f5f5f5;">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M60 100 Q60 60 100 55 Q140 60 140 100 Q155 112 155 128 Q155 145 140 145 Q135 145 130 140 Q115 148 100 148 Q85 148 70 140 Q65 145 60 145 Q45 145 45 128 Q45 112 60 100Z" stroke="#2a2a2a" stroke-width="1.5"/>
-          <path d="M70 140 Q60 160 58 175" stroke="#2a2a2a" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M130 140 Q140 160 142 175" stroke="#2a2a2a" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-        <div class="product-actions">
-          <button class="btn-quick-add" onclick="addToCart(event, 5)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-            Ajouter
-          </button>
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Confort · Voyage</div>
-        <div class="product-name">Oreiller Mémoire</div>
-        <div class="product-desc">Mousse à mémoire · Housse microfibre lavable · Compact</div>
-        <div class="product-footer">
-          <div>
-            <span class="product-price">29 €</span>
-          </div>
-          <button class="btn-add-card" onclick="addToCart(event, 5)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Produit 6 -->
-    <div class="product-card" data-cat="accessoires">
-      <div class="product-image">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="45" y="60" width="110" height="80" rx="6" stroke="#2a2a2a" stroke-width="1.5"/>
-          <line x1="45" y1="85" x2="155" y2="85" stroke="#e0e0e0" stroke-width="1"/>
-          <rect x="60" y="70" width="28" height="10" rx="2" stroke="#2a2a2a" stroke-width="1"/>
-          <rect x="55" y="92" width="90" height="38" rx="3" fill="#f2f2f2"/>
-          <line x1="60" y1="100" x2="140" y2="100" stroke="#d0d0d0" stroke-width="1"/>
-          <line x1="60" y1="108" x2="130" y2="108" stroke="#d0d0d0" stroke-width="1"/>
-          <line x1="60" y1="116" x2="110" y2="116" stroke="#d0d0d0" stroke-width="1"/>
-          <line x1="60" y1="124" x2="120" y2="124" stroke="#d0d0d0" stroke-width="1"/>
-          <text x="100" y="165" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="7" fill="#8a8a8a" letter-spacing="2">PASSPORT HOLDER</text>
-        </svg>
-        <span class="product-tag new">Nouveau</span>
-        <div class="product-actions">
-          <button class="btn-quick-add" onclick="addToCart(event, 6)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-            Ajouter
-          </button>
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Accessoires · Documents</div>
-        <div class="product-name">Passport Holder</div>
-        <div class="product-desc">Cuir vegan · Protection RFID · Porte-cartes intégré</div>
-        <div class="product-footer">
-          <div>
-            <span class="product-price">24 €</span>
-          </div>
-          <button class="btn-add-card" onclick="addToCart(event, 6)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Produit 7 -->
-    <div class="product-card" data-cat="accessoires">
-      <div class="product-image" style="background:#f5f5f5;">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="50" y="70" width="100" height="70" rx="8" stroke="#2a2a2a" stroke-width="1.5"/>
-          <rect x="60" y="80" width="80" height="50" rx="4" stroke="#e0e0e0" stroke-width="1"/>
-          <circle cx="100" cy="125" r="4" fill="#2a2a2a"/>
-          <line x1="100" y1="70" x2="100" y2="60" stroke="#2a2a2a" stroke-width="2"/>
-          <circle cx="100" cy="56" r="6" stroke="#2a2a2a" stroke-width="1.5"/>
-          <text x="100" y="110" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="9" font-weight="700" fill="#2a2a2a" letter-spacing="1">BAG TAG</text>
-          <text x="100" y="122" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="7" fill="#8a8a8a" letter-spacing="1">TM-2026</text>
-        </svg>
-        <div class="product-actions">
-          <button class="btn-quick-add" onclick="addToCart(event, 7)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-            Ajouter
-          </button>
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Accessoires · Identification</div>
-        <div class="product-name">Luggage Tag Acier</div>
-        <div class="product-desc">Acier brossé · Gravure laser · Attache inox renforcée</div>
-        <div class="product-footer">
-          <div>
-            <span class="product-price">14 €</span>
-          </div>
-          <button class="btn-add-card" onclick="addToCart(event, 7)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Produit 8 -->
-    <div class="product-card" data-cat="electronique">
-      <div class="product-image">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M60 100 Q60 70 100 66 Q140 70 140 100" stroke="#2a2a2a" stroke-width="4" stroke-linecap="round"/>
-          <rect x="42" y="88" width="22" height="34" rx="8" stroke="#2a2a2a" stroke-width="1.5"/>
-          <rect x="136" y="88" width="22" height="34" rx="8" stroke="#2a2a2a" stroke-width="1.5"/>
-          <rect x="47" y="95" width="12" height="20" rx="5" fill="#f0f0f0"/>
-          <rect x="141" y="95" width="12" height="20" rx="5" fill="#f0f0f0"/>
-          <path d="M100 114 Q106 130 110 145" stroke="#2a2a2a" stroke-width="2" stroke-linecap="round"/>
-          <text x="100" y="165" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="7" fill="#8a8a8a" letter-spacing="1">ANC · 40H</text>
-        </svg>
-        <span class="product-tag sale">−30%</span>
-        <div class="product-actions">
-          <button class="btn-quick-add" onclick="addToCart(event, 8)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-            Ajouter
-          </button>
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Électronique · Audio</div>
-        <div class="product-name">Casque ANC Pro</div>
-        <div class="product-desc">Réduction bruit active · 40h autonomie · Pliant · USB-C</div>
-        <div class="product-footer">
-          <div>
-            <span class="product-price">139 €</span>
-            <span class="product-price-old">199 €</span>
-          </div>
-          <button class="btn-add-card" onclick="addToCart(event, 8)">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
+<!-- NEWSLETTER -->
+<div class="newsletter">
+  <div class="nl-inner">
+    <div><div class="solari lg" id="nlLogo"></div><div class="nl-eyebrow" contenteditable="false" data-key="nlEyebrow" style="margin-top:24px;">Newsletter · Offres exclusives</div><div class="nl-title" contenteditable="false" data-key="nlTitle">RESTEZ<br>À BORD</div><div class="nl-sub" contenteditable="false" data-key="nlSub">Nouveaux produits, promotions exclusives et conseils voyage. Avant tout le monde.</div></div>
+    <div><form class="nl-form" onsubmit="return false;"><input type="text" class="nl-input" placeholder="Prénom"/><input type="email" class="nl-input" placeholder="Adresse email"/><button type="submit" class="nl-btn"><span contenteditable="false" data-key="nlBtn">S'inscrire au boarding</span></button></form></div>
   </div>
 </div>
 
-<!-- ═══════════════════ NEWSLETTER ═══════════════════ -->
-<div class="banner">
-  <div class="banner-inner">
-    <div class="banner-left">
-      <div class="solari lg" style="margin-bottom:24px;">
-        <div class="s-tile"><span class="s-letter">T</span></div>
-        <div class="s-tile"><span class="s-letter">M</span></div>
-      </div>
-      <div class="banner-eyebrow">Newsletter · Offres exclusives</div>
-      <div class="banner-title">RESTEZ<br>À BORD</div>
-      <div class="banner-sub">Nouveaux produits, promotions exclusives<br>et conseils voyage. Avant tout le monde.</div>
-    </div>
-    <div class="banner-right">
-      <form class="newsletter-form" onsubmit="return false;">
-        <input type="text" class="newsletter-input" placeholder="Prénom" />
-        <input type="email" class="newsletter-input" placeholder="Adresse email" />
-        <button type="submit" class="newsletter-btn">S'inscrire au boarding</button>
-        <div style="font-family:var(--f-mono);font-size:8px;color:rgba(244,244,244,.2);letter-spacing:1px;line-height:1.6;">
-          En vous inscrivant vous acceptez notre politique de confidentialité.<br>Désinscription possible à tout moment.
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<!-- FOOTER -->
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-top">
-      <div class="footer-brand">
-        <div class="solari sm">
-          <div class="s-tile"><span class="s-letter">T</span></div>
-          <div class="s-tile"><span class="s-letter">E</span></div>
-          <div class="s-tile"><span class="s-letter">R</span></div>
-          <div class="s-tile"><span class="s-letter">M</span></div>
-          <div class="s-tile"><span class="s-letter">I</span></div>
-          <div class="s-tile"><span class="s-letter">N</span></div>
-          <div class="s-tile"><span class="s-letter">A</span></div>
-          <div class="s-tile"><span class="s-letter">L</span></div>
-        </div>
-        <div class="footer-brand-sub">Accessoires de voyage conçus pour chaque terminal du monde. Qualité, fonctionnalité, design.</div>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Boutique</div>
-        <div class="footer-links">
-          <a href="#">Valises</a>
-          <a href="#">Sacs de voyage</a>
-          <a href="#">Accessoires</a>
-          <a href="#">Électronique</a>
-          <a href="#">Confort en vol</a>
-          <a href="#">Soldes</a>
-        </div>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Aide</div>
-        <div class="footer-links">
-          <a href="#">Livraison</a>
-          <a href="#">Retours</a>
-          <a href="#">Guide des tailles</a>
-          <a href="#">FAQ</a>
-          <a href="#">Contact</a>
-        </div>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Terminal</div>
-        <div class="footer-links">
-          <a href="#">À propos</a>
-          <a href="#">Nos matières</a>
-          <a href="#">Certifications</a>
-          <a href="#">Blog voyage</a>
-          <a href="#">Partenaires</a>
-        </div>
-      </div>
+      <div><div class="solari sm" id="footLogo"></div><div class="footer-brand-sub" contenteditable="false" data-key="footSub">Accessoires de voyage conçus pour chaque terminal du monde. Qualité, fonctionnalité, design.</div></div>
+      <div><div class="footer-col-title">Boutique</div><div class="footer-links"><a href="#">Valises</a><a href="#">Sacs de voyage</a><a href="#">Accessoires</a><a href="#">Électronique</a><a href="#">Confort en vol</a></div></div>
+      <div><div class="footer-col-title">Aide</div><div class="footer-links"><a href="#">Livraison</a><a href="#">Retours</a><a href="#">FAQ</a><a href="#">Contact</a></div></div>
+      <div><div class="footer-col-title">Terminal</div><div class="footer-links"><a href="#">À propos</a><a href="#">Nos matières</a><a href="#">Blog voyage</a><a href="#">Partenaires</a></div></div>
     </div>
-    <div class="footer-bottom">
-      <div class="footer-copy">© 2026 TERMINAL · Tous droits réservés</div>
-      <div class="footer-legal">
-        <a href="#">Mentions légales</a>
-        <a href="#">CGV</a>
-        <a href="#">Confidentialité</a>
-        <a href="#">Cookies</a>
-      </div>
-    </div>
+    <div class="footer-bottom"><div class="footer-copy" contenteditable="false" data-key="footCopy">© 2026 TERMINAL · Tous droits réservés</div><div class="footer-legal"><a href="#">Mentions légales</a><a href="#">CGV</a><a href="#">Confidentialité</a></div></div>
   </div>
 </footer>
 
-<!-- ═══════════════════ CART OVERLAY ═══════════════════ -->
+<!-- CART -->
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
-
-<!-- ═══════════════════ CART DRAWER ═══════════════════ -->
-<aside class="cart-drawer" id="cartDrawer" aria-label="Panier">
-
-  <!-- Flash "Ajouté" -->
-  <div class="cart-added-flash" id="cartFlash">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
-    <span id="cartFlashText">Produit ajouté au panier</span>
-  </div>
-
-  <!-- Header -->
+<aside class="cart-drawer" id="cartDrawer">
+  <div class="cart-flash" id="cartFlash"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg><span id="cartFlashTxt">Ajouté</span></div>
   <div class="cart-head">
-    <div class="cart-head-left">
-      <div class="cart-head-label">Récapitulatif</div>
-      <div class="cart-head-title">
-        PANIER
-        <span class="cart-count-pill" id="cartCountPill">0</span>
-      </div>
-    </div>
-    <button class="cart-close" onclick="closeCart()" aria-label="Fermer le panier">
-      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" stroke-linecap="round"/></svg>
-    </button>
+    <div class="cart-head-left"><div class="cart-head-lbl">Récapitulatif</div><div class="cart-head-title">PANIER <span class="cart-pill" id="cartPill">0</span></div></div>
+    <button class="cart-close" onclick="closeCart()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" stroke-linecap="round"/></svg></button>
   </div>
-
-  <!-- Mini Solari inside drawer -->
-  <div class="cart-solari">
-    <div class="solari sm">
-      <div class="s-tile"><span class="s-letter">T</span></div>
-      <div class="s-tile"><span class="s-letter">M</span></div>
-    </div>
-    <div class="cart-solari-text">Votre sélection</div>
-  </div>
-
-  <!-- Body -->
+  <div class="cart-solari-bar"><div class="solari sm" id="cartLogo"></div><div class="cart-solari-txt">Votre sélection</div></div>
   <div class="cart-body" id="cartBody">
-    <!-- State vide -->
     <div class="cart-empty" id="cartEmpty">
-      <div class="cart-empty-icon">
-        <svg fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 64 64">
-          <path d="M16 6 11 12v40a4 4 0 0 0 4 4h34a4 4 0 0 0 4-4V12l-5-6z" stroke-width="1.5"/>
-          <line x1="11" y1="22" x2="53" y2="22"/>
-          <path d="M42 28a10 10 0 0 1-20 0"/>
-        </svg>
-      </div>
+      <div class="cart-empty-icon"><svg fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 64 64"><path d="M16 6 11 12v40a4 4 0 0 0 4 4h34a4 4 0 0 0 4-4V12l-5-6z" stroke-width="1.5"/><line x1="11" y1="22" x2="53" y2="22"/><path d="M42 28a10 10 0 0 1-20 0"/></svg></div>
       <div class="cart-empty-title">PANIER VIDE</div>
-      <div class="cart-empty-sub">Ajoutez des articles depuis<br>notre boutique pour décoller.</div>
+      <div class="cart-empty-sub">Ajoutez des articles pour décoller.</div>
     </div>
-    <!-- Les items seront injectés ici par JS -->
   </div>
-
-  <!-- Footer -->
   <div class="cart-foot" id="cartFoot" style="display:none;">
-    <div class="cart-subtotal">
-      <div class="cart-subtotal-label">Sous-total</div>
-      <div class="cart-subtotal-amount" id="cartSubtotal">0 €</div>
-    </div>
+    <div class="cart-subtotal"><div class="cart-subtotal-lbl">Sous-total</div><div class="cart-subtotal-amt" id="cartTotal">0 €</div></div>
     <div class="cart-note">Livraison calculée à l'étape suivante</div>
-    <button class="btn-checkout">
-      Passer la commande
-      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg>
-    </button>
+    <button class="btn-checkout">Passer la commande <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round"/></svg></button>
     <button class="btn-continue" onclick="closeCart()">Continuer mes achats</button>
   </div>
 </aside>
 
-<!-- ═══════════════════ TOAST ═══════════════════ -->
-<div class="toast" id="toast">
-  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
-  <span id="toastText">Article ajouté</span>
+<!-- ADMIN BAR -->
+<div id="adminBar">
+  <button class="ab-btn" id="editToggleBtn" onclick="toggleEditMode()">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke-linecap="round"/></svg>
+    Éditer textes
+  </button>
+  <div class="ab-sep"></div>
+  <button class="ab-btn" onclick="openProductPanel()">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+    Produits
+  </button>
+  <div class="ab-sep"></div>
+  <button class="ab-btn" onclick="openSettings()">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    Réglages
+  </button>
+  <div class="ab-sep"></div>
+  <button class="ab-btn" onclick="saveAll()">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+    Sauvegarder
+  </button>
 </div>
 
-<!-- ═══════════════════ JAVASCRIPT ═══════════════════ -->
-<script>
-/* ─────────────────────────────────────────
-   DONNÉES PRODUITS
-   Pour modifier : changer ici, rien d'autre.
-───────────────────────────────────────── */
-const PRODUCTS = {
-  1: { name: 'Hardshell Pro S',    cat: 'Bagages · Cabine',        price: 89,  svgId: 'svg-bag-s' },
-  2: { name: 'Hardshell Pro M',    cat: 'Bagages · Soute',         price: 129, svgId: 'svg-bag-m' },
-  3: { name: 'Cadenas TSA Pro',    cat: 'Accessoires · Sécurité',  price: 19,  svgId: 'svg-lock'  },
-  4: { name: 'Power Bank 20K',     cat: 'Électronique · Énergie',  price: 49,  svgId: 'svg-power' },
-  5: { name: 'Oreiller Mémoire',   cat: 'Confort · Voyage',        price: 29,  svgId: 'svg-pillow'},
-  6: { name: 'Passport Holder',    cat: 'Accessoires · Documents', price: 24,  svgId: 'svg-pass'  },
-  7: { name: 'Luggage Tag Acier',  cat: 'Accessoires · Ident.',    price: 14,  svgId: 'svg-tag'   },
-  8: { name: 'Casque ANC Pro',     cat: 'Électronique · Audio',    price: 139, svgId: 'svg-head'  },
-};
-
-/* SVG miniatures pour le drawer */
-const PRODUCT_SVGS = {
-  'svg-bag-s': `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="16" y="10" width="48" height="60" rx="5" stroke="#2a2a2a" stroke-width="1.5"/><line x1="16" y1="30" x2="64" y2="30" stroke="#e0e0e0" stroke-width="1"/><path d="M28 10 Q28 4 40 4 Q52 4 52 10" stroke="#2a2a2a" stroke-width="2" stroke-linecap="round"/><rect x="34" y="38" width="12" height="8" rx="1" fill="#2a2a2a"/><rect x="20" y="70" width="8" height="4" rx="2" fill="#2a2a2a"/><rect x="52" y="70" width="8" height="4" rx="2" fill="#2a2a2a"/></svg>`,
-  'svg-bag-m': `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="16" width="56" height="52" rx="6" stroke="#2a2a2a" stroke-width="1.5"/><line x1="12" y1="34" x2="68" y2="34" stroke="#e0e0e0" stroke-width="1"/><path d="M24 16 Q24 8 40 8 Q56 8 56 16" stroke="#2a2a2a" stroke-width="2" stroke-linecap="round"/><rect x="32" y="40" width="16" height="10" rx="2" fill="#2a2a2a"/><rect x="18" y="68" width="10" height="5" rx="2.5" fill="#2a2a2a"/><rect x="52" y="68" width="10" height="5" rx="2.5" fill="#2a2a2a"/></svg>`,
-  'svg-lock':  `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="16" y="32" width="48" height="36" rx="6" stroke="#2a2a2a" stroke-width="1.5"/><rect x="28" y="20" width="8" height="14" rx="3" fill="#2a2a2a" opacity=".6"/><rect x="44" y="20" width="8" height="14" rx="3" fill="#2a2a2a" opacity=".6"/><rect x="36" y="20" width="8" height="14" rx="3" fill="#2a2a2a" opacity=".6"/><text x="40" y="56" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#2a2a2a" letter-spacing="1">TSA</text></svg>`,
-  'svg-power': `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="24" width="52" height="32" rx="6" stroke="#2a2a2a" stroke-width="1.5"/><rect x="62" y="34" width="8" height="12" rx="3" fill="#2a2a2a"/><rect x="18" y="32" width="36" height="16" rx="2" stroke="#e0e0e0" stroke-width="1"/><rect x="20" y="34" width="8" height="12" rx="1.5" fill="#2a2a2a"/><rect x="30" y="34" width="8" height="12" rx="1.5" fill="#2a2a2a"/><rect x="40" y="34" width="5" height="12" rx="1.5" fill="#e8e8e8"/></svg>`,
-  'svg-pillow':`<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 40 Q20 24 40 22 Q60 24 60 40 Q66 46 66 54 Q66 62 60 62 Q56 62 52 58 Q46 62 40 62 Q34 62 28 58 Q24 62 20 62 Q14 62 14 54 Q14 46 20 40Z" stroke="#2a2a2a" stroke-width="1.5"/></svg>`,
-  'svg-pass':  `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="12" width="52" height="56" rx="4" stroke="#2a2a2a" stroke-width="1.5"/><line x1="14" y1="26" x2="66" y2="26" stroke="#e0e0e0" stroke-width="1"/><rect x="20" y="32" width="40" height="28" rx="2" fill="#f2f2f2"/><line x1="22" y1="40" x2="58" y2="40" stroke="#e0e0e0" stroke-width="1"/><line x1="22" y1="48" x2="54" y2="48" stroke="#e0e0e0" stroke-width="1"/></svg>`,
-  'svg-tag':   `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="16" y="22" width="48" height="36" rx="4" stroke="#2a2a2a" stroke-width="1.5"/><line x1="16" y1="36" x2="64" y2="36" stroke="#e0e0e0" stroke-width="1"/><text x="40" y="52" text-anchor="middle" font-family="monospace" font-size="8" fill="#8a8a8a">TM-2026</text><line x1="40" y1="22" x2="40" y2="14" stroke="#2a2a2a" stroke-width="1.5"/><circle cx="40" cy="11" r="4" stroke="#2a2a2a" stroke-width="1.5"/></svg>`,
-  'svg-head':  `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 40 Q20 24 40 22 Q60 24 60 40" stroke="#2a2a2a" stroke-width="3" stroke-linecap="round"/><rect x="12" y="34" width="10" height="16" rx="4" stroke="#2a2a2a" stroke-width="1.5"/><rect x="58" y="34" width="10" height="16" rx="4" stroke="#2a2a2a" stroke-width="1.5"/></svg>`,
-};
-
-/* ─────────────────────────────────────────
-   ÉTAT DU PANIER
-───────────────────────────────────────── */
-let cart = {}; // { productId: quantity }
-
-function getCartTotal() {
-  return Object.entries(cart).reduce((total, [id, qty]) => total + PRODUCTS[id].price * qty, 0);
-}
-function getCartCount() {
-  return Object.values(cart).reduce((n, q) => n + q, 0);
-}
-
-/* ─────────────────────────────────────────
-   AJOUTER AU PANIER
-───────────────────────────────────────── */
-function addToCart(event, productId) {
-  event.stopPropagation();
-
-  const id = String(productId);
-  cart[id] = (cart[id] || 0) + 1;
-
-  updateCartUI();
-  openCart();
-  showCartFlash(PRODUCTS[id].name);
-  bumpBadge();
-}
-
-/* ─────────────────────────────────────────
-   MODIFIER QUANTITÉ
-───────────────────────────────────────── */
-function changeQty(productId, delta) {
-  const id = String(productId);
-  cart[id] = (cart[id] || 0) + delta;
-  if (cart[id] <= 0) delete cart[id];
-  updateCartUI();
-}
-
-/* ─────────────────────────────────────────
-   SUPPRIMER ITEM
-───────────────────────────────────────── */
-function removeItem(productId) {
-  delete cart[String(productId)];
-  updateCartUI();
-}
-
-/* ─────────────────────────────────────────
-   METTRE À JOUR L'UI
-───────────────────────────────────────── */
-function updateCartUI() {
-  const count = getCartCount();
-  const total = getCartTotal();
-
-  // Badge
-  document.getElementById('cartBadge').textContent = count;
-  document.getElementById('cartCountPill').textContent = count;
-
-  // Empty / filled state
-  const empty = document.getElementById('cartEmpty');
-  const foot  = document.getElementById('cartFoot');
-
-  if (count === 0) {
-    empty.style.display = 'flex';
-    foot.style.display  = 'none';
-    // Clear items
-    clearCartItems();
-    return;
-  }
-
-  empty.style.display = 'none';
-  foot.style.display  = 'flex';
-
-  // Rebuild items
-  clearCartItems();
-  Object.entries(cart).forEach(([id, qty]) => {
-    renderCartItem(id, qty);
-  });
-
-  // Subtotal
-  document.getElementById('cartSubtotal').textContent = total.toLocaleString('fr-FR') + ' €';
-}
-
-function clearCartItems() {
-  const body = document.getElementById('cartBody');
-  body.querySelectorAll('.cart-item').forEach(el => el.remove());
-}
-
-function renderCartItem(id, qty) {
-  const p = PRODUCTS[id];
-  const body = document.getElementById('cartBody');
-  const div = document.createElement('div');
-  div.className = 'cart-item';
-  div.dataset.itemId = id;
-  div.innerHTML = `
-    <div class="cart-item-img">${PRODUCT_SVGS[p.svgId] || ''}</div>
-    <div class="cart-item-info">
-      <div class="cart-item-cat">${p.cat}</div>
-      <div class="cart-item-name">${p.name}</div>
-      <div class="cart-item-qty">
-        <button class="qty-btn" onclick="changeQty(${id}, -1)">−</button>
-        <div class="qty-val">${qty}</div>
-        <button class="qty-btn" onclick="changeQty(${id}, +1)">+</button>
-      </div>
+<!-- PRODUCT PANEL -->
+<div id="productPanel">
+  <div class="pOverlay" onclick="closeProductPanel()"></div>
+  <div class="pDrawer">
+    <div class="pHead">
+      <div class="pHead-title">GESTION PRODUITS</div>
+      <button class="pClose" onclick="closeProductPanel()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" stroke-linecap="round"/></svg></button>
     </div>
-    <div class="cart-item-right">
-      <div class="cart-item-price">${(p.price * qty).toLocaleString('fr-FR')} €</div>
-      <button class="cart-item-remove" onclick="removeItem(${id})">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" stroke-linecap="round"/></svg>
-        Retirer
+    <div class="pBody">
+      <div class="p-list" id="pList"></div>
+      <div class="p-form" id="pForm">
+        <div class="p-form-title" id="pFormTitle">NOUVEAU PRODUIT</div>
+        <div class="p-form-grid">
+          <div class="p-field"><label>Nom du produit</label><input type="text" id="pName" placeholder="Ex: Valise Pro S"/></div>
+          <div class="p-field"><label>Catégorie filtre</label>
+            <select id="pCat">
+              <option value="bagages">Bagages</option>
+              <option value="accessoires">Accessoires</option>
+              <option value="electronique">Électronique</option>
+              <option value="confort">Confort</option>
+            </select>
+          </div>
+          <div class="p-field"><label>Catégorie affichée</label><input type="text" id="pCatLabel" placeholder="Ex: Bagages · Cabine"/></div>
+          <div class="p-field"><label>Prix (€)</label><input type="number" id="pPrice" placeholder="89"/></div>
+          <div class="p-field"><label>Prix barré (optionnel)</label><input type="number" id="pOldPrice" placeholder=""/></div>
+          <div class="p-field"><label>Badge (optionnel)</label><input type="text" id="pBadge" placeholder="Ex: Nouveau, −30%"/></div>
+        </div>
+        <div class="p-field"><label>Description courte</label><textarea id="pDesc" placeholder="Caractéristiques principales..."></textarea></div>
+        <div class="p-form-actions">
+          <button class="p-save-btn" onclick="saveProduct()">Enregistrer</button>
+          <button class="p-cancel-btn" onclick="cancelProductForm()">Annuler</button>
+        </div>
+      </div>
+      <button class="p-add-btn" onclick="newProduct()">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        Ajouter un produit
       </button>
     </div>
-  `;
-  body.appendChild(div);
+  </div>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div id="settingsPanel">
+  <div class="sOverlay" onclick="closeSettings()"></div>
+  <div class="sDrawer">
+    <div class="sHead"><div class="sHead-title">RÉGLAGES</div><button class="pClose" onclick="closeSettings()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" stroke-linecap="round"/></svg></button></div>
+    <div class="sBody">
+      <div class="s-section">
+        <div class="s-section-title">Nom du site</div>
+        <div class="s-field"><label>Nom affiché dans le logo</label><input type="text" id="sSiteName" value="TERMINAL"/></div>
+        <button class="s-apply-btn" onclick="applyLogoName()">Appliquer</button>
+      </div>
+      <div class="s-section">
+        <div class="s-section-title">Annonce topbar</div>
+        <div class="s-field"><label>Texte de la barre supérieure</label><input type="text" id="sTopbar" value="Livraison offerte dès 80€ · Retours gratuits 30 jours"/></div>
+        <button class="s-apply-btn" onclick="applyTopbar()">Appliquer</button>
+      </div>
+      <div class="s-section">
+        <div class="s-section-title">Couleurs</div>
+        <div class="s-field"><label>Couleur principale (noir tiles)</label><div class="color-row"><input type="text" id="cBlack" value="#0a0a0a"/><input type="color" value="#0a0a0a" oninput="syncColor('cBlack',this)"/></div></div>
+        <div class="s-field"><label>Couleur fond du site</label><div class="color-row"><input type="text" id="cBg" value="#ffffff"/><input type="color" value="#ffffff" oninput="syncColor('cBg',this)"/></div></div>
+        <div class="s-field"><label>Couleur bordures</label><div class="color-row"><input type="text" id="cBorder" value="#e0e0e0"/><input type="color" value="#e0e0e0" oninput="syncColor('cBorder',this)"/></div></div>
+        <button class="s-apply-btn" onclick="applyColors()">Appliquer les couleurs</button>
+        <button class="s-reset-btn" onclick="resetColors()">Réinitialiser</button>
+      </div>
+      <div class="s-section">
+        <div class="s-section-title">Livraison gratuite dès</div>
+        <div class="s-field"><label>Seuil (€)</label><input type="number" id="sFreeShip" value="80"/></div>
+        <button class="s-apply-btn" onclick="applyFreeShip()">Appliquer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   DONNÉES PRODUITS (modifiables)
+══════════════════════════════════════ */
+const SVG_ICONS = {
+  bagages:      `<svg viewBox="0 0 80 80" fill="none"><rect x="16" y="12" width="48" height="56" rx="5" stroke="#2a2a2a" stroke-width="1.5"/><line x1="16" y1="30" x2="64" y2="30" stroke="#e0e0e0"/><path d="M28 12 Q28 4 40 4 Q52 4 52 12" stroke="#2a2a2a" stroke-width="2" stroke-linecap="round"/><rect x="34" y="38" width="12" height="8" rx="1" fill="#2a2a2a"/><rect x="20" y="68" width="8" height="4" rx="2" fill="#2a2a2a"/><rect x="52" y="68" width="8" height="4" rx="2" fill="#2a2a2a"/></svg>`,
+  accessoires:  `<svg viewBox="0 0 80 80" fill="none"><rect x="16" y="24" width="48" height="36" rx="4" stroke="#2a2a2a" stroke-width="1.5"/><line x1="16" y1="38" x2="64" y2="38" stroke="#e0e0e0"/><rect x="28" y="28" width="12" height="6" rx="2" stroke="#2a2a2a" stroke-width="1"/><text x="40" y="58" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#2a2a2a" letter-spacing="1">TSA</text></svg>`,
+  electronique: `<svg viewBox="0 0 80 80" fill="none"><rect x="10" y="24" width="52" height="32" rx="6" stroke="#2a2a2a" stroke-width="1.5"/><rect x="62" y="34" width="8" height="12" rx="3" fill="#2a2a2a"/><rect x="18" y="32" width="36" height="16" rx="2" stroke="#e0e0e0"/><rect x="20" y="34" width="8" height="12" rx="1.5" fill="#2a2a2a"/><rect x="30" y="34" width="8" height="12" rx="1.5" fill="#2a2a2a"/></svg>`,
+  confort:      `<svg viewBox="0 0 80 80" fill="none"><path d="M20 40 Q20 24 40 22 Q60 24 60 40 Q66 46 66 54 Q66 62 60 62 Q56 62 52 58 Q46 62 40 62 Q34 62 28 58 Q24 62 20 62 Q14 62 14 54 Q14 46 20 40Z" stroke="#2a2a2a" stroke-width="1.5"/></svg>`,
+};
+
+let products = [
+  { id:1, name:'Hardshell Pro S',   cat:'bagages',      catLabel:'Bagages · Cabine',        price:89,  oldPrice:null, badge:'Nouveau',  desc:'Polycarbonate renforcé · 4 roues silencieuses · Serrure TSA' },
+  { id:2, name:'Hardshell Pro M',   cat:'bagages',      catLabel:'Bagages · Soute',         price:129, oldPrice:null, badge:'Best-seller', desc:'66cm · 75L · Polycarbonate mat · Extension zip' },
+  { id:3, name:'Cadenas TSA Pro',   cat:'accessoires',  catLabel:'Accessoires · Sécurité',  price:19,  oldPrice:null, badge:'Nouveau',  desc:'Combinaison 3 chiffres · Acier inoxydable · Certifié TSA' },
+  { id:4, name:'Power Bank 20K',    cat:'electronique', catLabel:'Électronique · Énergie',  price:49,  oldPrice:65,   badge:null,       desc:'20 000 mAh · USB-C 65W · 2× USB-A · Compact' },
+  { id:5, name:'Oreiller Mémoire',  cat:'confort',      catLabel:'Confort · Voyage',        price:29,  oldPrice:null, badge:null,       desc:'Mousse à mémoire · Housse microfibre lavable · Compact' },
+  { id:6, name:'Passport Holder',   cat:'accessoires',  catLabel:'Accessoires · Documents', price:24,  oldPrice:null, badge:'Nouveau',  desc:'Cuir vegan · Protection RFID · Porte-cartes intégré' },
+  { id:7, name:'Luggage Tag Acier', cat:'accessoires',  catLabel:'Accessoires · Ident.',    price:14,  oldPrice:null, badge:null,       desc:'Acier brossé · Gravure laser · Attache inox renforcée' },
+  { id:8, name:'Casque ANC Pro',    cat:'electronique', catLabel:'Électronique · Audio',    price:139, oldPrice:199,  badge:'−30%',     desc:'Réduction bruit active · 40h autonomie · Pliant · USB-C' },
+];
+
+let nextId = 9;
+let editingProductId = null;
+
+/* ══════════════════════════════════════
+   RENDU PRODUITS
+══════════════════════════════════════ */
+function renderProducts(filter='all'){
+  const grid = document.getElementById('productGrid');
+  const list = filter==='all' ? products : products.filter(p=>p.cat===filter);
+  grid.innerHTML = list.map(p=>`
+    <div class="product-card" data-cat="${p.cat}" data-id="${p.id}">
+      <div class="product-image">
+        ${SVG_ICONS[p.cat]||SVG_ICONS.accessoires}
+        ${p.badge?`<span class="product-tag">${p.badge}</span>`:''}
+        <div class="product-actions">
+          <button class="btn-quick" onclick="addToCart(event,${p.id})">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+            Ajouter
+          </button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-category">${p.catLabel}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-footer">
+          <div><span class="product-price">${p.price} €</span>${p.oldPrice?`<span class="product-price-old">${p.oldPrice} €</span>`:''}</div>
+          <button class="btn-add-sm" onclick="addToCart(event,${p.id})">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>`).join('');
 }
 
-/* ─────────────────────────────────────────
-   OPEN / CLOSE CART
-───────────────────────────────────────── */
-function openCart() {
-  document.getElementById('cartDrawer').classList.add('open');
-  document.getElementById('cartOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeCart() {
-  document.getElementById('cartDrawer').classList.remove('open');
-  document.getElementById('cartOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-/* ─────────────────────────────────────────
-   FLASH "AJOUTÉ"
-───────────────────────────────────────── */
-let flashTimer;
-function showCartFlash(name) {
-  const flash = document.getElementById('cartFlash');
-  document.getElementById('cartFlashText').textContent = `${name} ajouté`;
-  flash.classList.add('show');
-  clearTimeout(flashTimer);
-  flashTimer = setTimeout(() => flash.classList.remove('show'), 2800);
-}
-
-/* ─────────────────────────────────────────
-   BADGE BUMP ANIMATION
-───────────────────────────────────────── */
-function bumpBadge() {
-  const badge = document.getElementById('cartBadge');
-  badge.classList.remove('bump');
-  void badge.offsetWidth;
-  badge.classList.add('bump');
-}
-
-/* ─────────────────────────────────────────
-   FILTRES PRODUITS
-───────────────────────────────────────── */
-function filterProducts(btn, cat) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+function filterProducts(btn, cat){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  renderProducts(cat);
+}
 
-  document.querySelectorAll('.product-card').forEach(card => {
-    if (cat === 'all' || card.dataset.cat === cat) {
-      card.style.display = '';
-    } else {
-      card.style.display = 'none';
-    }
+/* ══════════════════════════════════════
+   SOLARI LOGOS
+══════════════════════════════════════ */
+function renderSolari(containerId, text, sizeClass=''){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  el.innerHTML = text.toUpperCase().split('').map(l=>`<div class="s-tile"><span class="s-letter">${l}</span></div>`).join('');
+}
+
+function renderAllLogos(){
+  const name = getSiteName();
+  renderSolari('logoTiles', name);
+  renderSolari('nlLogo', name);
+  renderSolari('footLogo', name);
+  renderSolari('cartLogo', name);
+}
+
+/* ══════════════════════════════════════
+   PANIER
+══════════════════════════════════════ */
+let cart = {};
+function getCount(){ return Object.values(cart).reduce((n,q)=>n+q,0); }
+function getTotal(){ return Object.entries(cart).reduce((t,[id,q])=>{ const p=products.find(p=>p.id==id); return t+(p?p.price*q:0); },0); }
+
+function addToCart(e, id){
+  e.stopPropagation();
+  cart[id]=(cart[id]||0)+1;
+  updateCartUI();
+  openCart();
+  showFlash(products.find(p=>p.id==id)?.name||'Produit');
+  bumpBadge();
+}
+function changeQty(id,d){
+  cart[id]=(cart[id]||0)+d;
+  if(cart[id]<=0) delete cart[id];
+  updateCartUI();
+}
+function removeItem(id){ delete cart[id]; updateCartUI(); }
+
+function updateCartUI(){
+  const count=getCount(), total=getTotal();
+  document.getElementById('cartBadge').textContent=count;
+  document.getElementById('cartPill').textContent=count;
+  const empty=document.getElementById('cartEmpty');
+  const foot=document.getElementById('cartFoot');
+  const body=document.getElementById('cartBody');
+  body.querySelectorAll('.cart-item').forEach(el=>el.remove());
+  if(count===0){ empty.style.display='flex'; foot.style.display='none'; return; }
+  empty.style.display='none'; foot.style.display='flex';
+  Object.entries(cart).forEach(([id,qty])=>{
+    const p=products.find(p=>p.id==id); if(!p) return;
+    const d=document.createElement('div'); d.className='cart-item'; d.dataset.itemId=id;
+    d.innerHTML=`
+      <div class="cart-item-img">${SVG_ICONS[p.cat]||SVG_ICONS.accessoires}</div>
+      <div>
+        <div class="cart-item-cat">${p.catLabel}</div>
+        <div class="cart-item-name">${p.name}</div>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="changeQty(${id},-1)">−</button>
+          <div class="qty-val">${qty}</div>
+          <button class="qty-btn" onclick="changeQty(${id},+1)">+</button>
+        </div>
+      </div>
+      <div class="cart-item-right">
+        <div class="cart-item-price">${(p.price*qty)} €</div>
+        <button class="cart-item-rm" onclick="removeItem(${id})">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" stroke-linecap="round"/></svg>Retirer
+        </button>
+      </div>`;
+    body.appendChild(d);
+  });
+  document.getElementById('cartTotal').textContent=total+' €';
+}
+
+function openCart(){ document.getElementById('cartDrawer').classList.add('open'); document.getElementById('cartOverlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeCart(){ document.getElementById('cartDrawer').classList.remove('open'); document.getElementById('cartOverlay').classList.remove('open'); document.body.style.overflow=''; }
+
+let flashTimer;
+function showFlash(name){
+  const f=document.getElementById('cartFlash');
+  document.getElementById('cartFlashTxt').textContent=name+' ajouté';
+  f.classList.add('show'); clearTimeout(flashTimer);
+  flashTimer=setTimeout(()=>f.classList.remove('show'),2800);
+}
+function bumpBadge(){ const b=document.getElementById('cartBadge'); b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); }
+
+/* ══════════════════════════════════════
+   MODE ÉDITION TEXTES
+══════════════════════════════════════ */
+let editMode=false;
+function toggleEditMode(){
+  editMode=!editMode;
+  document.body.classList.toggle('edit-mode',editMode);
+  const btn=document.getElementById('editToggleBtn');
+  btn.classList.toggle('active',editMode);
+  btn.querySelector('svg+*') // just update label
+  // toggle contenteditable on all keyed elements
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    el.contentEditable = editMode ? 'true' : 'false';
+  });
+  if(!editMode) collectTextEdits();
+}
+
+/* Collecter les textes édités */
+const textData = {};
+function collectTextEdits(){
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    textData[el.dataset.key] = el.innerHTML;
   });
 }
 
-/* ─────────────────────────────────────────
-   ESCAPE KEY
-───────────────────────────────────────── */
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeCart();
-});
-</script>
+/* ══════════════════════════════════════
+   PANNEAU PRODUITS
+══════════════════════════════════════ */
+function openProductPanel(){
+  document.getElementById('productPanel').classList.add('open');
+  renderPList();
+}
+function closeProductPanel(){ document.getElementById('productPanel').classList.remove('open'); }
 
+function renderPList(){
+  const list=document.getElementById('pList');
+  list.innerHTML=products.map(p=>`
+    <div class="p-row" id="prow-${p.id}">
+      <div class="p-row-info">
+        <div class="p-row-name">${p.name}</div>
+        <div class="p-row-meta">${p.catLabel} · ${p.price} €${p.badge?' · '+p.badge:''}</div>
+      </div>
+      <div class="p-row-actions">
+        <button class="p-action-btn" onclick="editProduct(${p.id})" title="Modifier">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button class="p-action-btn del" onclick="deleteProduct(${p.id})" title="Supprimer">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function newProduct(){
+  editingProductId=null;
+  document.getElementById('pFormTitle').textContent='NOUVEAU PRODUIT';
+  document.getElementById('pName').value='';
+  document.getElementById('pCat').value='bagages';
+  document.getElementById('pCatLabel').value='';
+  document.getElementById('pPrice').value='';
+  document.getElementById('pOldPrice').value='';
+  document.getElementById('pBadge').value='';
+  document.getElementById('pDesc').value='';
+  document.getElementById('pForm').classList.add('open');
+  document.getElementById('pForm').scrollIntoView({behavior:'smooth'});
+}
+
+function editProduct(id){
+  const p=products.find(p=>p.id==id); if(!p) return;
+  editingProductId=id;
+  document.getElementById('pFormTitle').textContent='MODIFIER PRODUIT';
+  document.getElementById('pName').value=p.name;
+  document.getElementById('pCat').value=p.cat;
+  document.getElementById('pCatLabel').value=p.catLabel;
+  document.getElementById('pPrice').value=p.price;
+  document.getElementById('pOldPrice').value=p.oldPrice||'';
+  document.getElementById('pBadge').value=p.badge||'';
+  document.getElementById('pDesc').value=p.desc;
+  document.getElementById('pForm').classList.add('open');
+  document.querySelectorAll('.p-row').forEach(r=>r.classList.remove('editing'));
+  document.getElementById('prow-'+id)?.classList.add('editing');
+  document.getElementById('pForm').scrollIntoView({behavior:'smooth'});
+}
+
+function deleteProduct(id){
+  if(!confirm('Supprimer ce produit ?')) return;
+  products=products.filter(p=>p.id!=id);
+  renderPList();
+  renderProducts();
+}
+
+function saveProduct(){
+  const name=document.getElementById('pName').value.trim();
+  if(!name){ alert('Le nom est requis.'); return; }
+  const p={
+    id: editingProductId||nextId++,
+    name, cat:document.getElementById('pCat').value,
+    catLabel:document.getElementById('pCatLabel').value||document.getElementById('pCat').value,
+    price:parseFloat(document.getElementById('pPrice').value)||0,
+    oldPrice:parseFloat(document.getElementById('pOldPrice').value)||null,
+    badge:document.getElementById('pBadge').value.trim()||null,
+    desc:document.getElementById('pDesc').value.trim(),
+  };
+  if(editingProductId){ const idx=products.findIndex(x=>x.id==editingProductId); products[idx]=p; }
+  else products.push(p);
+  editingProductId=null;
+  document.getElementById('pForm').classList.remove('open');
+  renderPList();
+  renderProducts();
+}
+
+function cancelProductForm(){
+  document.getElementById('pForm').classList.remove('open');
+  editingProductId=null;
+  document.querySelectorAll('.p-row').forEach(r=>r.classList.remove('editing'));
+}
+
+/* ══════════════════════════════════════
+   RÉGLAGES SITE
+══════════════════════════════════════ */
+function openSettings(){ document.getElementById('settingsPanel').classList.add('open'); }
+function closeSettings(){ document.getElementById('settingsPanel').classList.remove('open'); }
+
+function getSiteName(){ return localStorage.getItem('tm_sitename')||'TERMINAL'; }
+
+function applyLogoName(){
+  const name=document.getElementById('sSiteName').value.trim()||'TERMINAL';
+  localStorage.setItem('tm_sitename',name);
+  renderAllLogos();
+  document.title=name+' — Accessoires de Voyage';
+}
+
+function applyTopbar(){
+  const txt=document.getElementById('sTopbar').value.trim();
+  document.querySelector('.topbar span')||document.querySelector('.topbar').innerHTML;
+  const tb=document.querySelector('.topbar');
+  if(tb) tb.textContent=txt;
+  localStorage.setItem('tm_topbar',txt);
+}
+
+function syncColor(inputId, picker){ document.getElementById(inputId).value=picker.value; }
+
+function applyColors(){
+  const black=document.getElementById('cBlack').value;
+  const bg=document.getElementById('cBg').value;
+  const border=document.getElementById('cBorder').value;
+  document.documentElement.style.setProperty('--black',black);
+  document.documentElement.style.setProperty('--tile',black);
+  document.documentElement.style.setProperty('--bg',bg);
+  document.documentElement.style.setProperty('--border',border);
+  localStorage.setItem('tm_colors',JSON.stringify({black,bg,border}));
+}
+
+function resetColors(){
+  ['--black','--tile','--bg','--border'].forEach(v=>document.documentElement.style.removeProperty(v));
+  localStorage.removeItem('tm_colors');
+  document.getElementById('cBlack').value='#0a0a0a';
+  document.getElementById('cBg').value='#ffffff';
+  document.getElementById('cBorder').value='#e0e0e0';
+}
+
+function applyFreeShip(){
+  const val=document.getElementById('sFreeShip').value||80;
+  const tb=document.querySelector('.topbar');
+  if(tb) tb.textContent=`Livraison offerte dès ${val}€ · Retours gratuits 30 jours · Accessoires certifiés TSA`;
+  localStorage.setItem('tm_freeship',val);
+}
+
+/* ══════════════════════════════════════
+   SAUVEGARDE GLOBALE (localStorage)
+══════════════════════════════════════ */
+function saveAll(){
+  collectTextEdits();
+  localStorage.setItem('tm_texts', JSON.stringify(textData));
+  localStorage.setItem('tm_products', JSON.stringify(products));
+  // Visual feedback
+  const btn=[...document.querySelectorAll('.ab-btn')].find(b=>b.textContent.includes('Sauvegarder'));
+  if(btn){ const orig=btn.innerHTML; btn.innerHTML='<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg> Sauvegardé !'; btn.style.color='#4caf50'; setTimeout(()=>{ btn.innerHTML=orig; btn.style.color=''; },2000); }
+}
+
+/* ══════════════════════════════════════
+   CHARGEMENT DEPUIS localStorage
+══════════════════════════════════════ */
+function loadSaved(){
+  // Textes
+  const texts=JSON.parse(localStorage.getItem('tm_texts')||'{}');
+  Object.entries(texts).forEach(([key,val])=>{
+    const el=document.querySelector(`[data-key="${key}"]`);
+    if(el) el.innerHTML=val;
+  });
+  // Produits
+  const savedProducts=JSON.parse(localStorage.getItem('tm_products')||'null');
+  if(savedProducts){ products=savedProducts; nextId=Math.max(...products.map(p=>p.id))+1; }
+  // Couleurs
+  const colors=JSON.parse(localStorage.getItem('tm_colors')||'null');
+  if(colors){
+    document.documentElement.style.setProperty('--black',colors.black);
+    document.documentElement.style.setProperty('--tile',colors.black);
+    document.documentElement.style.setProperty('--bg',colors.bg);
+    document.documentElement.style.setProperty('--border',colors.border);
+    document.getElementById('cBlack').value=colors.black;
+    document.getElementById('cBg').value=colors.bg;
+    document.getElementById('cBorder').value=colors.border;
+  }
+  // Nom du site
+  const name=getSiteName();
+  document.getElementById('sSiteName').value=name;
+  // Topbar
+  const topbar=localStorage.getItem('tm_topbar');
+  if(topbar){ document.querySelector('.topbar').textContent=topbar; document.getElementById('sTopbar').value=topbar; }
+  // Logo
+  renderAllLogos();
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  loadSaved();
+  renderProducts();
+  updateCartUI();
+});
+
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeCart(); closeProductPanel(); closeSettings(); } });
+</script>
 </body>
 </html>
